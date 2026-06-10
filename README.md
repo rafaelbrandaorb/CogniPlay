@@ -9,7 +9,10 @@
 
 O **AcessiQuiz Cloud** é uma solução digital desenvolvida para responder aos desafios pedagógicos da neurodivergência (como TEA e TDAH) tanto no contexto da educação escolar regular quanto nas salas de recursos multifuncionais do **AEE (Atendimento Educacional Especializado)**.
 
-Ao contrário de quizzes tradicionais que geram pressão por tempo e ansiedade, o AcessiQuiz funciona como um ambiente de acolhimento tátil e visual. Enquanto o **usuário ativo** joga e responde a estímulos baseados nas **Funções Executivas** (Controle Inibitório, Planejamento e Flexibilidade Cognitiva), o sistema realiza uma **telemetria bidirecional em tempo real** enviando métricas diretamente para a nuvem da **Google Cloud Platform (Firebase)**.
+Ao contrário de quizzes tradicionais que geram pressão por tempo e ansiedade, o AcessiQuiz funciona como
+um ambiente de acolhimento tátil e visual. Enquanto o **usuário ativo** joga e responde a estímulos baseados
+nas **Funções Executivas** (Controle Inibitório, Planejamento e Flexibilidade Cognitiva), o sistema realiza uma
+**telemetria bidirecional em tempo real** enviando métricas diretamente para a nuvem da **Google Cloud Platform (Firebase)**.
 
 ---
 
