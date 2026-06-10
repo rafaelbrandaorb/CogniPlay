@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AcessiQuiz Play - Edição AEE Profissional</title>
+    <title>AcessiQuiz Play - Edição Escolar & AEE</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     
     <style>
@@ -43,6 +43,32 @@
 
         h2 { margin-top: 0; font-size: 22px; display: flex; align-items: center; gap: 10px; }
 
+        .campo-texto {
+            width: 93%;
+            padding: 14px;
+            border-radius: 12px;
+            border: 2px solid rgba(255,255,255,0.1);
+            background: rgba(0,0,0,0.2);
+            color: white;
+            font-size: 16px;
+            margin-bottom: 20px;
+            outline: none;
+        }
+        .campo-texto:focus { border-color: var(--cor-primaria); }
+
+        .btn-principal {
+            width: 100%;
+            background: var(--cor-primaria);
+            color: white;
+            border: none;
+            padding: 15px;
+            border-radius: 12px;
+            font-size: 18px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+
         .indicador-nivel {
             background: rgba(58, 134, 255, 0.2);
             color: #70a1ff;
@@ -62,27 +88,9 @@
             margin-bottom: 25px;
             overflow: hidden;
         }
-        .barra-progresso {
-            height: 100%;
-            width: 0%;
-            background: var(--cor-acerto);
-            transition: width 0.4s ease;
-        }
-
-        .area-jogo {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            text-align: center;
-        }
-
-        .pergunta-texto {
-            font-size: 20px;
-            font-weight: 600;
-            margin-bottom: 20px;
-            min-height: 50px;
-            line-height: 1.4;
-        }
+        .barra-progresso { height: 100%; width: 0%; background: var(--cor-acerto); transition: width 0.4s ease; }
+        .area-jogo { display: flex; flex-direction: column; align-items: center; text-align: center; }
+        .pergunta-texto { font-size: 20px; font-weight: 600; margin-bottom: 20px; min-height: 50px; line-height: 1.4; }
 
         .card-imagem-estimulo {
             width: 150px;
@@ -99,56 +107,42 @@
         }
 
         .container-opcoes { width: 100%; }
-
         .btn-resposta {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 15px;
-            width: 100%;
-            background: rgba(255,255,255,0.05);
-            color: white;
-            border: 2px solid rgba(255,255,255,0.1);
-            padding: 14px;
-            margin: 10px 0;
-            border-radius: 12px;
-            font-size: 17px;
-            font-weight: bold;
-            cursor: pointer;
-            transition: all 0.2s;
+            display: flex; align-items: center; justify-content: center; gap: 15px; width: 100%;
+            background: rgba(255,255,255,0.05); color: white; border: 2px solid rgba(255,255,255,0.1);
+            padding: 14px; margin: 10px 0; border-radius: 12px; font-size: 17px; font-weight: bold; cursor: pointer;
         }
-
-        .btn-resposta:hover {
-            background: var(--cor-primaria);
-            border-color: var(--cor-primaria);
-        }
-
+        .btn-resposta:hover { background: var(--cor-primaria); border-color: var(--cor-primaria); }
         .feedback-acerto { background-color: var(--cor-acerto) !important; border-color: var(--cor-acerto) !important; }
         .feedback-tentenovamente { background-color: var(--cor-atencao) !important; border-color: var(--cor-atencao) !important; }
-
         #texto-status { font-size: 18px; font-weight: bold; margin-top: 15px; height: 25px; }
     </style>
 </head>
 <body>
 
     <div class="painel">
-        <div style="display: flex; justify-content: space-between; align-items: center;">
-            <h2><i class="fa-solid fa-brain"></i> AcessiQuiz Play</h2>
-            <div class="indicador-nivel" id="label-nivel">Carregando...</div>
-        </div>
-        <div class="barra-progresso-container">
-            <div class="barra-progresso" id="barra-progresso"></div>
+        <div id="tela-login">
+            <h2><i class="fa-solid fa-id-card-clip"></i> Registro de Usuário</h2>
+            <p style="color: var(--texto-mutado); margin-bottom: 25px;">Insira o nome do aluno ou paciente para configurar o perfil na nuvem:</p>
+            <input type="text" id="input-nome-crianca" class="campo-texto" placeholder="Ex: Mariana Costa" autocomplete="off">
+            <button class="btn-principal" onclick="iniciarSessao()">Entrar no Jogo</button>
         </div>
 
-        <div class="area-jogo">
-            <div class="pergunta-texto" id="campo-pergunta">Preparando estímulos neurológicos...</div>
-            
-            <div class="card-imagem-estimulo" id="figura-estimulo">
-                <i class="fa-solid fa-circle-notch fa-spin"></i>
+        <div id="conteudo-jogo" style="display: none;">
+            <div style="display: flex; justify-content: space-between; align-items: center;">
+                <h2><i class="fa-solid fa-graduation-cap"></i> AcessiQuiz Play</h2>
+                <div class="indicador-nivel" id="label-nivel">Carregando...</div>
+            </div>
+            <div class="barra-progresso-container">
+                <div class="barra-progresso" id="barra-progresso"></div>
             </div>
 
-            <div class="container-opcoes" id="campo-opcoes"></div>
-            <div id="texto-status"></div>
+            <div class="area-jogo">
+                <div class="pergunta-texto" id="campo-pergunta">Carregando itens neurológicos...</div>
+                <div class="card-imagem-estimulo" id="figura-estimulo"></div>
+                <div class="container-opcoes" id="campo-opcoes"></div>
+                <div id="texto-status"></div>
+            </div>
         </div>
     </div>
 
@@ -156,7 +150,6 @@
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
         import { getFirestore, addDoc, collection } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 
-        // CONECTE AQUI O SEU CONFIG DO FIRESTORE GOOGLE CLOUD
         const firebaseConfig = {
             apiKey: "AIzaSyC8xX4K-RKCgJ0EEbQ00sKVkMWPDepshg8",
             authDomain: "acessiquiz.firebaseapp.com",
@@ -170,57 +163,94 @@
         const app = initializeApp(firebaseConfig);
         const db = getFirestore(app);
 
-        // Banco de Dados Científico Baseado em Protocolos de Avaliação Cognitiva do AEE
-        const trilhaNiveis = [
+        // BANCO DE PERGUNTAS EXPANDIDO POR CATEGORIA (Modelo Estrutural)
+        const bancoPerguntas = [
             {
-                nivelNome: "Estágio 1: Controle Inibitório",
-                pergunta: "Atenção: ignore a cor do botão. Clique na palavra que descreve o que a figura abaixo REALMENTE é:",
-                icone: "fa-solid fa-apple-whole", // Uma Maçã
-                categoria: "Controle Inibitório (Stroop)",
+                nivelNome: "Item 1: Foco Seletivo",
+                pergunta: "Ignore a cor do botão. Clique na palavra que descreve o que a figura abaixo REALMENTE é:",
+                icone: "fa-solid fa-apple-whole",
+                categoria: "Controle Inibitório",
                 alternativas: [
                     { texto: "É uma Fruta", correta: true, icone: "fa-solid fa-basket-shopping" },
                     { texto: "É um Carro", correta: false, icone: "fa-solid fa-car" }
                 ]
             },
             {
-                nivelNome: "Estágio 2: Sequenciamento Lógico",
-                pergunta: "Para escovar os dentes, precisamos colocar a pasta na escova. O que fazemos IMEDIATAMENTE depois?",
+                nivelNome: "Item 2: Linha do Tempo",
+                pergunta: "Para escovar os dentes, colocamos a pasta na escova. O que fazemos LOGO EM SEGUIDA?",
                 icone: "fa-solid fa-tooth",
-                categoria: "Planejamento Executivo",
+                categoria: "Planejamento",
                 alternativas: [
-                    { texto: "Escovar os dentes com movimentos suaves", correta: true, icone: "fa-solid fa-sparkles" },
-                    { texto: "Guardar a escova seca no armário", correta: false, icone: "fa-solid fa-box" }
+                    { texto: "Escovar com movimentos suaves", correta: true, icone: "fa-solid fa-sparkles" },
+                    { texto: "Guardar a escova no armário", correta: false, icone: "fa-solid fa-box" }
                 ]
             },
             {
-                nivelNome: "Estágio 3: Flexibilidade Cognitiva",
-                pergunta: "O tempo mudou e começou a chover muito forte lá fora! Qual item se tornou necessário usar agora?",
+                nivelNome: "Item 3: Adaptação Climática",
+                pergunta: "O tempo mudou e começou a chover muito forte! Qual item se tornou necessário usar?",
                 icone: "fa-solid fa-cloud-showers-heavy",
-                categoria: "Flexibilidade Adaptativa",
+                categoria: "Flexibilidade Cognitiva",
                 alternativas: [
                     { texto: "Um guarda-chuva ou capa", correta: true, icone: "fa-solid fa-umbrella" },
                     { texto: "Óculos de sol e boné", correta: false, icone: "fa-solid fa-sun" }
                 ]
+            },
+            {
+                nivelNome: "Item 4: Categorização Visual",
+                pergunta: "Qual destes objetos pertence à mesma categoria de um lápis, uma borracha e um caderno?",
+                icone: "fa-solid fa-pencil",
+                categoria: "Memória de Trabalho",
+                alternativas: [
+                    { texto: "Uma régua escolar", correta: true, icone: "fa-solid fa-ruler" },
+                    { texto: "Uma colher de sopa", correta: false, icone: "fa-solid fa-spoon" }
+                ]
+            },
+            {
+                nivelNome: "Item 5: Consciência Fonológica",
+                pergunta: "Qual palavra termina com o mesmo som da palavra GATO?",
+                icone: "fa-solid fa-cat",
+                categoria: "Processamento Auditivo",
+                alternativas: [
+                    { texto: "PATO", correta: true, icone: "fa-solid fa-dove" },
+                    { texto: "CASA", correta: false, icone: "fa-solid fa-house" }
+                ]
             }
         ];
 
+        let nomePaciente = "";
+        let idSessaoUnica = "";
         let indiceAtual = 0;
-        let tempoInicioQuestao = Date.now();
+        let tempoInicioQuestao = 0;
+
+        window.iniciarSessao = function() {
+            const inputNome = document.getElementById('input-nome-crianca').value.trim();
+            if(!inputNome) {
+                alert("Por favor, preencha o nome do usuário.");
+                return;
+            }
+            nomePaciente = inputNome;
+            idSessaoUnica = "sessao_" + Date.now();
+            
+            document.getElementById('tela-login').style.display = "none";
+            document.getElementById('conteudo-jogo').style.display = "block";
+            
+            atualizarJogo();
+        }
 
         window.atualizarJogo = function() {
-            const progressoPorcento = (indiceAtual / trilhaNiveis.length) * 100;
+            const progressoPorcento = (indiceAtual / bancoPerguntas.length) * 100;
             document.getElementById('barra-progresso').style.width = `${progressoPorcento}%`;
 
-            if (indiceAtual >= trilhaNiveis.length) {
-                document.getElementById('campo-pergunta').innerText = "Sessão Concluída! Excelente esforço! 🏆";
+            if (indiceAtual >= bancoPerguntas.length) {
+                document.getElementById('campo-pergunta').innerText = "Parabéns! Sessão finalizada com sucesso! 🏆";
                 document.getElementById('figura-estimulo').innerHTML = '<i class="fa-solid fa-square-check" style="color:#06d6a0;"></i>';
                 document.getElementById('campo-opcoes').innerHTML = "";
                 document.getElementById('texto-status').style.color = "var(--cor-acerto)";
-                document.getElementById('texto-status').innerText = "Dados clínicos transmitidos para a nuvem.";
+                document.getElementById('texto-status').innerText = "Métricas gravadas no painel do avaliador.";
                 return;
             }
 
-            const dadosNivel = trilhaNiveis[indiceAtual];
+            const dadosNivel = bancoPerguntas[indiceAtual];
             document.getElementById('label-nivel').innerText = dadosNivel.nivelNome;
             document.getElementById('campo-pergunta').innerText = dadosNivel.pergunta;
             document.getElementById('figura-estimulo').innerHTML = `<i class="${dadosNivel.icone}"></i>`;
@@ -249,17 +279,17 @@
             if (correta) {
                 botaoElemento.classList.add('feedback-acerto');
                 status.style.color = "var(--cor-acerto)";
-                status.innerHTML = "Estímulo processado com sucesso! 🌟";
+                status.innerHTML = "Estímulo computado! 🌟";
             } else {
                 botaoElemento.classList.add('feedback-tentenovamente');
                 status.style.color = "var(--cor-atencao)";
-                status.innerHTML = "Tentativa registrada na telemetria. Continuando... 🚀";
+                status.innerHTML = "Processando resposta... 🚀";
             }
 
-            // ENVIANDO MÉTRICAS TÉCNICAS DIRETAMENTE PARA O FIRESTORE
             try {
                 await addDoc(collection(db, "telemetria_acessiquiz"), {
-                    alunoID: "Sessao_AEE_Amostra", 
+                    alunoNome: nomePaciente,
+                    sessaoID: idSessaoUnica,
                     nivel: indiceAtual + 1,
                     categoriaAEE: categoria,
                     tempoRespostaSegundos: tempoDecisao,
@@ -273,10 +303,8 @@
             setTimeout(() => {
                 indiceAtual++;
                 atualizarJogo();
-            }, 2500);
+            }, 2000);
         }
-
-        atualizarJogo();
     </script>
 </body>
 </html>
