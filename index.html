@@ -3,146 +3,160 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AcessiQuiz Play - Edição Escolar & AEE</title>
+    <title>AcessiQuiz Play - Edição Super Colorida</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     
     <style>
         :root {
-            --bg-principal: #0b1329;
-            --bg-card: #1c2541;
-            --texto-claro: #f8fafc;
-            --texto-mutado: #64748b;
-            --cor-primaria: #3a86ff;
-            --cor-acerto: #06d6a0;
-            --cor-atencao: #ff7043;
+            /* Nova Paleta Ultra Colorida e Vibrante */
+            --bg-gradiente: linear-gradient(135deg, #651fff, #8e24aa); /* Roxo e violeta elétrico */
+            --bg-card: #ffff00;       /* Amarelo Vivo para o fundo do jogo */
+            --texto-escuro: #121212;
+            --cor-botao-padrao: #00e5ff; /* Azul Ciano Neon */
+            --cor-acerto: #00e676;     /* Verde Hulk Vibrante */
+            --cor-erro: #ff1744;       /* Vermelho Cereja Vivo */
+            --cor-borda: #304ffe;      /* Azul Escuro Royal */
         }
 
         body {
-            background-color: var(--bg-principal);
-            color: var(--texto-claro);
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: var(--bg-gradiente);
+            color: var(--texto-escuro);
+            font-family: 'Segoe UI', system-ui, sans-serif;
             margin: 0;
             padding: 15px;
             display: flex;
             justify-content: center;
             align-items: center;
-            min-height: 90vh;
+            min-height: 95vh;
         }
 
         .painel {
             background: var(--bg-card);
-            border-radius: 20px;
-            padding: 25px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.4);
-            border: 1px solid rgba(255,255,255,0.03);
-            display: flex;
-            flex-direction: column;
+            border-radius: 32px;
+            padding: 35px 25px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.4);
+            border: 5px solid var(--cor-borda);
             width: 100%;
-            max-width: 500px;
+            max-width: 460px;
+            text-align: center;
         }
-
-        h2 { margin-top: 0; font-size: 22px; display: flex; align-items: center; gap: 10px; }
 
         .campo-texto {
-            width: 93%;
-            padding: 14px;
-            border-radius: 12px;
-            border: 2px solid rgba(255,255,255,0.1);
-            background: rgba(0,0,0,0.2);
-            color: white;
-            font-size: 16px;
-            margin-bottom: 20px;
-            outline: none;
+            width: 90%;
+            padding: 18px;
+            border-radius: 20px;
+            border: 4px solid var(--cor-borda);
+            background: #ffffff;
+            color: #000;
+            font-size: 22px;
+            font-weight: bold;
+            margin-bottom: 25px;
+            text-align: center;
+            box-shadow: inset 0 4px 8px rgba(0,0,0,0.1);
         }
-        .campo-texto:focus { border-color: var(--cor-primaria); }
 
         .btn-principal {
             width: 100%;
-            background: var(--cor-primaria);
+            background: #ff007f; /* Rosa Choque */
             color: white;
-            border: none;
-            padding: 15px;
-            border-radius: 12px;
-            font-size: 18px;
-            font-weight: bold;
+            border: 4px solid var(--cor-borda);
+            padding: 18px;
+            border-radius: 20px;
+            font-size: 24px;
+            font-weight: 900;
             cursor: pointer;
-            transition: background 0.2s;
+            box-shadow: 0 8px 0 var(--cor-borda);
+            text-shadow: 2px 2px 0px rgba(0,0,0,0.3);
+            transition: transform 0.1s;
         }
+        .btn-principal:active { transform: translateY(6px); box-shadow: 0 2px 0 var(--cor-borda); }
 
         .indicador-nivel {
-            background: rgba(58, 134, 255, 0.2);
-            color: #70a1ff;
-            padding: 6px 14px;
-            border-radius: 20px;
-            font-weight: bold;
-            font-size: 13px;
-            margin-bottom: 15px;
-            align-self: flex-start;
+            background: #ff9100; /* Laranja Vivo */
+            color: #ffffff;
+            padding: 8px 20px;
+            border-radius: 25px;
+            font-weight: 900;
+            font-size: 16px;
+            display: inline-block;
+            border: 3px solid var(--cor-borda);
         }
 
         .barra-progresso-container {
             width: 100%;
-            background: rgba(255,255,255,0.1);
-            height: 8px;
-            border-radius: 4px;
-            margin-bottom: 25px;
+            background: #ffffff;
+            height: 20px;
+            border-radius: 10px;
+            margin: 20px 0;
             overflow: hidden;
+            border: 3px solid var(--cor-borda);
         }
-        .barra-progresso { height: 100%; width: 0%; background: var(--cor-acerto); transition: width 0.4s ease; }
-        .area-jogo { display: flex; flex-direction: column; align-items: center; text-align: center; }
-        .pergunta-texto { font-size: 20px; font-weight: 600; margin-bottom: 20px; min-height: 50px; line-height: 1.4; }
+        .barra-progresso { height: 100%; width: 0%; background: #ff007f; transition: width 0.3s; }
 
         .card-imagem-estimulo {
-            width: 150px;
-            height: 150px;
-            background: rgba(255,255,255,0.05);
-            border-radius: 16px;
+            width: 180px;
+            height: 180px;
+            background: #ffffff;
+            border-radius: 28px;
             display: flex;
             justify-content: center;
             align-items: center;
-            font-size: 64px;
-            color: var(--cor-primaria);
-            margin-bottom: 25px;
-            border: 2px dashed rgba(255,255,255,0.1);
+            font-size: 100px;
+            margin: 0 auto 25px auto;
+            border: 5px solid var(--cor-borda);
+            box-shadow: 0 8px 16px rgba(0,0,0,0.15);
         }
 
-        .container-opcoes { width: 100%; }
         .btn-resposta {
-            display: flex; align-items: center; justify-content: center; gap: 15px; width: 100%;
-            background: rgba(255,255,255,0.05); color: white; border: 2px solid rgba(255,255,255,0.1);
-            padding: 14px; margin: 10px 0; border-radius: 12px; font-size: 17px; font-weight: bold; cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 15px;
+            width: 100%;
+            background: var(--cor-botao-padrao);
+            color: var(--texto-escuro);
+            border: 4px solid var(--cor-borda);
+            padding: 18px;
+            margin: 15px 0;
+            border-radius: 24px;
+            font-size: 22px;
+            font-weight: 900;
+            cursor: pointer;
+            box-shadow: 0 6px 0 var(--cor-borda);
+            transition: all 0.1s;
         }
-        .btn-resposta:hover { background: var(--cor-primaria); border-color: var(--cor-primaria); }
-        .feedback-acerto { background-color: var(--cor-acerto) !important; border-color: var(--cor-acerto) !important; }
-        .feedback-tentenovamente { background-color: var(--cor-atencao) !important; border-color: var(--cor-atencao) !important; }
-        #texto-status { font-size: 18px; font-weight: bold; margin-top: 15px; height: 25px; }
+        .btn-resposta:active { transform: translateY(4px); box-shadow: 0 2px 0 var(--cor-borda); }
+        
+        /* Classes de Feedback Ultra Coloridas */
+        .feedback-acerto { background: var(--cor-acerto) !important; color: #000 !important; }
+        .feedback-erro { background: var(--cor-erro) !important; color: #fff !important; }
+        #texto-status { font-size: 26px; font-weight: 900; margin-top: 15px; height: 35px; text-shadow: 1px 1px 0px #fff; }
     </style>
 </head>
 <body>
 
     <div class="painel">
         <div id="tela-login">
-            <h2><i class="fa-solid fa-id-card-clip"></i> Registro de Usuário</h2>
-            <p style="color: var(--texto-mutado); margin-bottom: 25px;">Insira o nome do aluno ou paciente para configurar o perfil na nuvem:</p>
-            <input type="text" id="input-nome-crianca" class="campo-texto" placeholder="Ex: Mariana Costa" autocomplete="off">
-            <button class="btn-principal" onclick="iniciarSessao()">Entrar no Jogo</button>
+            <h2 style="font-size: 32px; color: var(--cor-borda); margin-top:0; font-weight: 900;"><i class="fa-solid fa-face-laugh-beam" style="color: #ff007f;"></i> AcessiQuiz</h2>
+            <p style="color: #334155; font-size: 18px; font-weight: bold; margin-bottom: 25px;">Escreve o teu nome para começar a aventura:</p>
+            <input type="text" id="input-nome-crianca" class="campo-texto" placeholder="Teu Nome Aqui" autocomplete="off">
+            <button class="btn-principal" onclick="iniciarSessao()">COMEÇAR! 🚀</button>
         </div>
 
         <div id="conteudo-jogo" style="display: none;">
             <div style="display: flex; justify-content: space-between; align-items: center;">
-                <h2><i class="fa-solid fa-graduation-cap"></i> AcessiQuiz Play</h2>
-                <div class="indicador-nivel" id="label-nivel">Carregando...</div>
+                <div class="indicador-nivel" id="label-nivel">Nível 1</div>
+                <span id="categoria-label" style="font-weight: 900; color: var(--cor-borda); font-size: 15px; background: #fff; padding: 5px 10px; border-radius: 10px; border: 2px solid var(--cor-borda);"></span>
             </div>
+            
             <div class="barra-progresso-container">
                 <div class="barra-progresso" id="barra-progresso"></div>
             </div>
 
-            <div class="area-jogo">
-                <div class="pergunta-texto" id="campo-pergunta">Carregando itens neurológicos...</div>
-                <div class="card-imagem-estimulo" id="figura-estimulo"></div>
-                <div class="container-opcoes" id="campo-opcoes"></div>
-                <div id="texto-status"></div>
-            </div>
+            <div id="campo-pergunta" style="font-size: 24px; font-weight: 900; color: var(--cor-borda); margin-bottom: 20px; line-height: 1.3;"></div>
+            <div class="card-imagem-estimulo" id="figura-estimulo"></div>
+            <div id="campo-opcoes"></div>
+            <div id="texto-status"></div>
         </div>
     </div>
 
@@ -163,56 +177,38 @@
         const app = initializeApp(firebaseConfig);
         const db = getFirestore(app);
 
-        // BANCO DE PERGUNTAS EXPANDIDO POR CATEGORIA (Modelo Estrutural)
         const bancoPerguntas = [
             {
-                nivelNome: "Item 1: Foco Seletivo",
-                pergunta: "Ignore a cor do botão. Clique na palavra que descreve o que a figura abaixo REALMENTE é:",
-                icone: "fa-solid fa-apple-whole",
+                nivelNome: "Nível 1",
+                pergunta: "Carrega no botão que tem a MESMA COR da estrela!",
+                icone: "fa-solid fa-star",
+                estiloIcone: "color: #ff3d00;", /* Estrela Laranja bem vibrante */
+                categoria: "Cores (Zero Leitura)",
+                alternativas: [
+                    { texto: "COR LARANJA", correta: true, icone: "fa-solid fa-square", estilo: "color: #ff3d00;" },
+                    { texto: "COR AZUL", correta: false, icone: "fa-solid fa-square", estilo: "color: #00b0ff;" }
+                ]
+            },
+            {
+                nivelNome: "Nível 2",
+                pergunta: "Encontra a forma geométrica IGUAL à do quadrado:",
+                icone: "fa-solid fa-square-full",
+                estiloIcone: "color: #651fff;",
+                categoria: "Formas (Zero Leitura)",
+                alternativas: [
+                    { texto: "QUADRADO", correta: true, icone: "fa-solid fa-square", estilo: "color: #121212;" },
+                    { texto: "TRIÂNGULO", correta: false, icone: "fa-solid fa-triangle-exclamation", estilo: "color: #121212;" }
+                ]
+            },
+            {
+                nivelNome: "Nível 3",
+                pergunta: "Esquece as cores! Qual destas figuras é um ANIMAL?",
+                icone: "fa-solid fa-cat",
+                estiloIcone: "color: #00b0ff;", 
                 categoria: "Controle Inibitório",
                 alternativas: [
-                    { texto: "É uma Fruta", correta: true, icone: "fa-solid fa-basket-shopping" },
-                    { texto: "É um Carro", correta: false, icone: "fa-solid fa-car" }
-                ]
-            },
-            {
-                nivelNome: "Item 2: Linha do Tempo",
-                pergunta: "Para escovar os dentes, colocamos a pasta na escova. O que fazemos LOGO EM SEGUIDA?",
-                icone: "fa-solid fa-tooth",
-                categoria: "Planejamento",
-                alternativas: [
-                    { texto: "Escovar com movimentos suaves", correta: true, icone: "fa-solid fa-sparkles" },
-                    { texto: "Guardar a escova no armário", correta: false, icone: "fa-solid fa-box" }
-                ]
-            },
-            {
-                nivelNome: "Item 3: Adaptação Climática",
-                pergunta: "O tempo mudou e começou a chover muito forte! Qual item se tornou necessário usar?",
-                icone: "fa-solid fa-cloud-showers-heavy",
-                categoria: "Flexibilidade Cognitiva",
-                alternativas: [
-                    { texto: "Um guarda-chuva ou capa", correta: true, icone: "fa-solid fa-umbrella" },
-                    { texto: "Óculos de sol e boné", correta: false, icone: "fa-solid fa-sun" }
-                ]
-            },
-            {
-                nivelNome: "Item 4: Categorização Visual",
-                pergunta: "Qual destes objetos pertence à mesma categoria de um lápis, uma borracha e um caderno?",
-                icone: "fa-solid fa-pencil",
-                categoria: "Memória de Trabalho",
-                alternativas: [
-                    { texto: "Uma régua escolar", correta: true, icone: "fa-solid fa-ruler" },
-                    { texto: "Uma colher de sopa", correta: false, icone: "fa-solid fa-spoon" }
-                ]
-            },
-            {
-                nivelNome: "Item 5: Consciência Fonológica",
-                pergunta: "Qual palavra termina com o mesmo som da palavra GATO?",
-                icone: "fa-solid fa-cat",
-                categoria: "Processamento Auditivo",
-                alternativas: [
-                    { texto: "PATO", correta: true, icone: "fa-solid fa-dove" },
-                    { texto: "CASA", correta: false, icone: "fa-solid fa-house" }
+                    { texto: "É um Gato", correta: true, icone: "fa-solid fa-dog", estilo: "color: #ff007f;" },
+                    { texto: "É uma Maçã", correta: false, icone: "fa-solid fa-apple-whole", estilo: "color: #00e676;" }
                 ]
             }
         ];
@@ -225,7 +221,7 @@
         window.iniciarSessao = function() {
             const inputNome = document.getElementById('input-nome-crianca').value.trim();
             if(!inputNome) {
-                alert("Por favor, preencha o nome do usuário.");
+                alert("Por favor, digita o teu nome!");
                 return;
             }
             nomePaciente = inputNome;
@@ -233,7 +229,6 @@
             
             document.getElementById('tela-login').style.display = "none";
             document.getElementById('conteudo-jogo').style.display = "block";
-            
             atualizarJogo();
         }
 
@@ -242,18 +237,21 @@
             document.getElementById('barra-progresso').style.width = `${progressoPorcento}%`;
 
             if (indiceAtual >= bancoPerguntas.length) {
-                document.getElementById('campo-pergunta').innerText = "Parabéns! Sessão finalizada com sucesso! 🏆";
-                document.getElementById('figura-estimulo').innerHTML = '<i class="fa-solid fa-square-check" style="color:#06d6a0;"></i>';
+                document.getElementById('campo-pergunta').innerText = "Parabéns! Conseguiste! 🏆";
+                document.getElementById('figura-estimulo').innerHTML = '<i class="fa-solid fa-trophy" style="color:#ffaa00; text-shadow: 0 0 20px #ffaa00;"></i>';
                 document.getElementById('campo-opcoes').innerHTML = "";
                 document.getElementById('texto-status').style.color = "var(--cor-acerto)";
-                document.getElementById('texto-status').innerText = "Métricas gravadas no painel do avaliador.";
+                document.getElementById('texto-status').innerText = "O teu progresso foi enviado com sucesso!";
                 return;
             }
 
             const dadosNivel = bancoPerguntas[indiceAtual];
             document.getElementById('label-nivel').innerText = dadosNivel.nivelNome;
+            document.getElementById('categoria-label').innerText = dadosNivel.categoria;
             document.getElementById('campo-pergunta').innerText = dadosNivel.pergunta;
-            document.getElementById('figura-estimulo').innerHTML = `<i class="${dadosNivel.icone}"></i>`;
+            
+            const divEstimulo = document.getElementById('figura-estimulo');
+            divEstimulo.innerHTML = `<i class="${dadosNivel.icone}" style="${dadosNivel.estiloIcone || ''}"></i>`;
             
             const container = document.getElementById('campo-opcoes');
             container.innerHTML = "";
@@ -262,7 +260,7 @@
             dadosNivel.alternativas.forEach(alt => {
                 const botao = document.createElement('button');
                 botao.className = 'btn-resposta';
-                botao.innerHTML = `<i class="${alt.icone}"></i> ${alt.texto}`;
+                botao.innerHTML = `<i class="${alt.icone}" style="${alt.estilo || ''}"></i> <span style="margin-left:8px;">${alt.texto}</span>`;
                 botao.onclick = () => checarResposta(alt.correta, botao, dadosNivel.categoria);
                 container.appendChild(botao);
             });
@@ -278,12 +276,12 @@
 
             if (correta) {
                 botaoElemento.classList.add('feedback-acerto');
-                status.style.color = "var(--cor-acerto)";
-                status.innerHTML = "Estímulo computado! 🌟";
+                status.style.color = "#00c853";
+                status.innerHTML = "INCRÍVEL! ✨🎉";
             } else {
-                botaoElemento.classList.add('feedback-tentenovamente');
-                status.style.color = "var(--cor-atencao)";
-                status.innerHTML = "Processando resposta... 🚀";
+                botaoElemento.classList.add('feedback-erro');
+                status.style.color = "var(--cor-erro)";
+                status.innerHTML = "Enviado! Vamos à próxima! 🚀";
             }
 
             try {
@@ -292,19 +290,20 @@
                     sessaoID: idSessaoUnica,
                     nivel: indiceAtual + 1,
                     categoriaAEE: categoria,
-                    tempoRespostaSegundos: tempoDecisao,
+                    tempoRespostaSegundos: Number(tempoDecisao),
                     comportamentoAssertivo: correta,
                     horarioRegistro: new Date().toISOString()
                 });
             } catch (e) {
-                console.error("Erro Cloud: ", e);
+                console.error("Erro no Firebase: ", e);
             }
 
             setTimeout(() => {
                 indiceAtual++;
                 atualizarJogo();
-            }, 2000);
+            }, 1800);
         }
     </script>
 </body>
 </html>
+
