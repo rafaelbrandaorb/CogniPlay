@@ -5,17 +5,18 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>AcessiQuiz Play - Edição Super Colorida</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <link rel="manifest" href="manifest.json">
+    <meta name="theme-color" content="#651fff">
     
     <style>
         :root {
-            /* Nova Paleta Ultra Colorida e Vibrante */
-            --bg-gradiente: linear-gradient(135deg, #651fff, #8e24aa); /* Roxo e violeta elétrico */
-            --bg-card: #ffff00;       /* Amarelo Vivo para o fundo do jogo */
+            --bg-gradiente: linear-gradient(135deg, #651fff, #8e24aa);
+            --bg-card: #ffff00;
             --texto-escuro: #121212;
-            --cor-botao-padrao: #00e5ff; /* Azul Ciano Neon */
-            --cor-acerto: #00e676;     /* Verde Hulk Vibrante */
-            --cor-erro: #ff1744;       /* Vermelho Cereja Vivo */
-            --cor-borda: #304ffe;      /* Azul Escuro Royal */
+            --cor-botao-padrao: #00e5ff;
+            --cor-acerto: #00e676;
+            --cor-erro: #ff1744;
+            --cor-borda: #304ffe;
         }
 
         body {
@@ -57,7 +58,7 @@
 
         .btn-principal {
             width: 100%;
-            background: #ff007f; /* Rosa Choque */
+            background: #ff007f;
             color: white;
             border: 4px solid var(--cor-borda);
             padding: 18px;
@@ -72,7 +73,7 @@
         .btn-principal:active { transform: translateY(6px); box-shadow: 0 2px 0 var(--cor-borda); }
 
         .indicador-nivel {
-            background: #ff9100; /* Laranja Vivo */
+            background: #ff9100;
             color: #ffffff;
             padding: 8px 20px;
             border-radius: 25px;
@@ -127,7 +128,6 @@
         }
         .btn-resposta:active { transform: translateY(4px); box-shadow: 0 2px 0 var(--cor-borda); }
         
-        /* Classes de Feedback Ultra Coloridas */
         .feedback-acerto { background: var(--cor-acerto) !important; color: #000 !important; }
         .feedback-erro { background: var(--cor-erro) !important; color: #fff !important; }
         #texto-status { font-size: 26px; font-weight: 900; margin-top: 15px; height: 35px; text-shadow: 1px 1px 0px #fff; }
@@ -162,7 +162,7 @@
 
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-        import { getFirestore, addDoc, collection } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+        import { initializeFirestore, persistentLocalCache, persistentMultipleTabManager, addDoc, collection } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 
         const firebaseConfig = {
             apiKey: "AIzaSyC8xX4K-RKCgJ0EEbQ00sKVkMWPDepshg8",
@@ -175,14 +175,20 @@
         };
 
         const app = initializeApp(firebaseConfig);
-        const db = getFirestore(app);
+        
+        // Ativação do Suporte Offline Nativo do Firebase
+        const db = initializeFirestore(app, {
+            localCache: persistentLocalCache({
+                tabManager: persistentMultipleTabManager()
+            })
+        });
 
         const bancoPerguntas = [
             {
                 nivelNome: "Nível 1",
                 pergunta: "Carrega no botão que tem a MESMA COR da estrela!",
                 icone: "fa-solid fa-star",
-                estiloIcone: "color: #ff3d00;", /* Estrela Laranja bem vibrante */
+                estiloIcone: "color: #ff3d00;",
                 categoria: "Cores (Zero Leitura)",
                 alternativas: [
                     { texto: "COR LARANJA", correta: true, icone: "fa-solid fa-square", estilo: "color: #ff3d00;" },
@@ -241,7 +247,7 @@
                 document.getElementById('figura-estimulo').innerHTML = '<i class="fa-solid fa-trophy" style="color:#ffaa00; text-shadow: 0 0 20px #ffaa00;"></i>';
                 document.getElementById('campo-opcoes').innerHTML = "";
                 document.getElementById('texto-status').style.color = "var(--cor-acerto)";
-                document.getElementById('texto-status').innerText = "O teu progresso foi enviado com sucesso!";
+                document.getElementById('texto-status').innerText = "O teu progresso foi guardado com sucesso!";
                 return;
             }
 
@@ -295,7 +301,7 @@
                     horarioRegistro: new Date().toISOString()
                 });
             } catch (e) {
-                console.error("Erro no Firebase: ", e);
+                console.error("Dados salvos localmente (Aguardando conexão): ", e);
             }
 
             setTimeout(() => {
@@ -304,6 +310,15 @@
             }, 1800);
         }
     </script>
+    
+    <script>
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', () => {
+                navigator.serviceWorker.register('./sw.js')
+                    .then(reg => console.log('AcessiQuiz pronto para rodar Offline!'))
+                    .catch(err => console.log('Erro ao registar PWA', err));
+            });
+        }
+    </script>
 </body>
 </html>
-
