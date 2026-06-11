@@ -3,270 +3,436 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Painel Analítico Colorido - AcessiQuiz</title>
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <title>AcessiQuiz - Dashboard de Telemetria Neuroinclusiva</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
-    
     <style>
         :root {
-            --bg-principal: #0b0f19;
-            --bg-card: #161d30;
-            --texto-claro: #ffffff;
-            --neon-prof: #00e5ff;
-            --neon-pais: #ff007f;
-            --neon-ouro: #ffea00;
+            --bg-color: #020617;
+            --panel-bg: #0b0f19;
+            --card-bg: #1e293b;
+            --accent-green: #00ffaa;
+            --accent-pink: #ff007f;
+            --accent-blue: #38bdf8;
+            --text-color: #f8fafc;
+            --text-muted: #94a3b8;
+            --border-color: rgba(255, 255, 255, 0.08);
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
         }
 
         body {
-            background-color: var(--bg-principal);
-            color: var(--texto-claro);
-            font-family: 'Segoe UI', system-ui, sans-serif;
-            margin: 0;
-            padding: 20px;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            display: flex;
+            min-height: 100vh;
         }
 
-        .container {
-            max-width: 1000px;
-            margin: 0 auto;
+        .sidebar {
+            width: 260px;
+            background-color: var(--panel-bg);
+            border-right: 1px solid var(--border-color);
+            padding: 30px 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 40px;
         }
 
-        .cabecalho {
-            background: linear-gradient(90deg, #1e1b4b, #312e81);
-            padding: 25px;
-            border-radius: 24px;
-            margin-bottom: 25px;
-            border: 3px solid var(--neon-prof);
-            box-shadow: 0 0 15px rgba(0, 229, 255, 0.2);
+        .brand {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-size: 1.4rem;
+            font-weight: bold;
+            color: var(--accent-green);
+            letter-spacing: 1px;
         }
 
-        .grid-paineis {
-            display: grid;
-            grid-template-columns: 1fr;
-            gap: 25px;
+        .menu-list {
+            list-style: none;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
         }
 
-        .bloco-painel {
-            background: var(--bg-card);
-            border-radius: 24px;
-            padding: 25px;
-            box-shadow: 0 10px 25px rgba(0,0,0,0.3);
-            border: 2px solid rgba(255,255,255,0.05);
-        }
-
-        .bloco-prof { border-left: 8px solid var(--neon-prof); box-shadow: 0 0 15px rgba(0, 229, 255, 0.1); }
-        .bloco-pais { border-left: 8px solid var(--neon-pais); box-shadow: 0 0 15px rgba(255, 0, 127, 0.1); }
-
-        .cards-mini {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
+        .menu-item {
+            display: flex;
+            align-items: center;
             gap: 15px;
-            margin-bottom: 20px;
+            padding: 14px 18px;
+            color: var(--text-muted);
+            text-decoration: none;
+            border-radius: 12px;
+            font-weight: 500;
+            transition: all 0.2s;
         }
 
-        .card-dado {
-            background: #0f1422;
-            padding: 20px;
-            border-radius: 16px;
-            text-align: center;
-            border: 1px solid rgba(255,255,255,0.1);
+        .menu-item:hover, .menu-item.active {
+            color: var(--text-color);
+            background-color: rgba(255, 255, 255, 0.05);
         }
 
-        .card-dado h4 { margin: 0; color: #94a3b8; font-size: 14px; text-transform: uppercase; letter-spacing: 1px; }
-        .card-dado .num { font-size: 36px; font-weight: 900; margin-top: 8px; }
+        .menu-item.active {
+            border-left: 4px solid var(--accent-pink);
+            background-color: rgba(255, 0, 127, 0.05);
+        }
+
+        .main-content {
+            flex-grow: 1;
+            padding: 40px;
+            overflow-y: auto;
+            max-width: 1400px;
+            margin: 0 auto;
+            width: 100%;
+        }
+
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 35px;
+        }
+
+        h1 {
+            font-size: 2.2rem;
+            font-weight: 700;
+        }
+
+        .user-selector {
+            background-color: var(--card-bg);
+            color: var(--text-color);
+            border: 1px solid var(--border-color);
+            padding: 10px 20px;
+            border-radius: 12px;
+            font-size: 1rem;
+            outline: none;
+            cursor: pointer;
+        }
+
+        .metrics-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+            gap: 25px;
+            margin-bottom: 40px;
+        }
+
+        .card {
+            background-color: var(--panel-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 20px;
+            padding: 25px;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 4px;
+        }
+
+        .card.green::before { background-color: var(--accent-green); }
+        .card.pink::before { background-color: var(--accent-pink); }
+        .card.blue::before { background-color: var(--accent-blue); }
+
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            color: var(--text-muted);
+            font-weight: 600;
+            font-size: 0.95rem;
+        }
+
+        .card-value {
+            font-size: 2.2rem;
+            font-weight: 700;
+        }
+
+        .card-subtext {
+            font-size: 0.85rem;
+            color: var(--text-muted);
+        }
+
+        .dashboard-row {
+            display: grid;
+            grid-template-columns: 1.6fr 1fr;
+            gap: 30px;
+            margin-bottom: 40px;
+        }
+
+        .panel {
+            background-color: var(--panel-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 20px;
+            padding: 30px;
+        }
+
+        .panel-title {
+            font-size: 1.2rem;
+            font-weight: 600;
+            margin-bottom: 25px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
 
         table {
             width: 100%;
             border-collapse: collapse;
-            font-size: 15px;
+            text-align: left;
+        }
+
+        th {
+            padding: 14px;
+            color: var(--text-muted);
+            font-size: 0.9rem;
+            font-weight: 600;
+            border-bottom: 2px solid var(--border-color);
+        }
+
+        td {
+            padding: 16px 14px;
+            font-size: 0.95rem;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .badge {
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: bold;
+        }
+
+        .badge.success { background-color: rgba(0, 255, 170, 0.1); color: var(--accent-green); }
+        .badge.neutral { background-color: rgba(56, 189, 248, 0.1); color: var(--accent-blue); }
+
+        .vector-list {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .vector-item {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .vector-info {
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.95rem;
+        }
+
+        .vector-bar-bg {
+            height: 12px;
+            background-color: var(--card-bg);
+            border-radius: 6px;
+            overflow: hidden;
+        }
+
+        .vector-bar-fill {
+            height: 100%;
+            border-radius: 6px;
+            transition: width 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .chart-svg-box {
+            width: 100%;
+            height: 200px;
             margin-top: 15px;
         }
-        th, td { padding: 14px; text-align: left; border-bottom: 2px solid rgba(255,255,255,0.05); }
-        th { color: #00e5ff; background: rgba(0, 229, 255, 0.05); font-weight: bold; }
-        tr:hover { background: rgba(255,255,255,0.02); }
 
-        .badge-status { padding: 6px 12px; border-radius: 10px; font-weight: 900; font-size: 12px; text-transform: uppercase; }
+        .trend-path {
+            fill: none;
+            stroke: var(--accent-green);
+            stroke-width: 4;
+            stroke-dasharray: 1000;
+            stroke-dashoffset: 1000;
+            animation: drawLine 2s forwards ease-in-out;
+        }
+
+        @keyframes drawLine { to { stroke-dashoffset: 0; } }
     </style>
 </head>
 <body>
 
-    <div class="container">
-        <div class="cabecalho">
-            <h1 style="margin:0; font-size: 28px; color: var(--neon-ouro);"><i class="fa-solid fa-chart-pie"></i> Painel de Telemetria Colorida</h1>
-            <p style="margin: 8px 0 0 0; color: #cbd5e1; font-size: 16px;">Aluno Ativo: <span id="nome-usuario-global" style="color: #00ffaa; font-weight:900; background: rgba(0,255,170,0.1); padding: 3px 10px; border-radius: 8px;">Aguardando...</span></p>
+    <div class="sidebar">
+        <div class="brand"><i class="fa-solid fa-brain"></i> AcessiQuiz Cloud</div>
+        <ul class="menu-list">
+            <li><a href="#" class="menu-item active"><i class="fa-solid fa-chart-pie"></i> Visão Geral</a></li>
+            <li><a href="#" class="menu-item"><i class="fa-solid fa-user-check"></i> Usuários Ativos</a></li>
+            <li><a href="#" class="menu-item"><i class="fa-solid fa-database"></i> Repositório (100+ Itens)</a></li>
+            <li><a href="#" class="menu-item"><i class="fa-solid fa-file-export"></i> Laudos e Relatórios</a></li>
+        </ul>
+    </div>
+
+    <div class="main-content">
+        <header>
+            <div>
+                <h1>Painel do Especialista</h1>
+                <p style="color: var(--text-muted); margin-top: 5px;">Mapeamento clínico sem estressar ou expor o aluno.</p>
+            </div>
+            <div>
+                <select class="user-selector" id="user-select" onchange="changeUser()">
+                    <option value="pedro">Usuário Ativo: Pedro Silva (TEA)</option>
+                    <option value="lucas">Usuário Ativo: Lucas Santos (TDAH)</option>
+                </select>
+            </div>
+        </header>
+
+        <div class="metrics-grid">
+            <div class="card green">
+                <div class="card-header">Tempo Médio de Decisão <i class="fa-solid fa-clock"></i></div>
+                <div class="card-value" id="metric-time">2.4s</div>
+                <div class="card-subtext" id="metric-time-sub"></div>
+            </div>
+            <div class="card pink">
+                <div class="card-header">Índice de Assertividade <i class="fa-solid fa-bullseye"></i></div>
+                <div class="card-value" id="metric-accuracy">85%</div>
+                <div class="card-subtext" id="metric-accuracy-sub"></div>
+            </div>
+            <div class="card blue">
+                <div class="card-header">Constância / Sessões <i class="fa-solid fa-gamepad"></i></div>
+                <div class="card-value" id="metric-sessions">14</div>
+                <div class="card-subtext">Nível estável de engajamento lúdico</div>
+            </div>
         </div>
 
-        <div class="grid-paineis">
-            <div class="bloco-painel bloco-prof">
-                <h2 style="color: var(--neon-prof); margin-top: 0; font-size: 22px;"><i class="fa-solid fa-user-graduate"></i> Espaço Diagnóstico do Professor</h2>
-                <div class="cards-mini">
-                    <div class="card-dado">
-                        <h4>Tempo de Processamento Médio</h4>
-                        <div class="num" id="prof-tempo" style="color: var(--neon-prof); text-shadow: 0 0 10px rgba(0,229,255,0.3);">0.00s</div>
-                    </div>
-                    <div class="card-dado">
-                        <h4>Estágios Monitorizados</h4>
-                        <div class="num" id="prof-estagios" style="color: var(--neon-ouro);">0</div>
-                    </div>
-                </div>
-                <div style="background: #0f1422; padding: 20px; border-radius: 16px; border: 1px solid rgba(255,255,255,0.1);">
-                    <canvas id="graficoEvolucao"></canvas>
-                </div>
+        <div class="dashboard-row">
+            <div class="panel">
+                <div class="panel-title"><i class="fa-solid fa-history" style="color: var(--accent-blue);"></i> Histórico Recente pós-sessão</div>
+                <table id="history-table">
+                    <thead>
+                        <tr>
+                            <th>Data/Hora</th>
+                            <th>Módulo Aplicado</th>
+                            <th>Habilidade Mapeada</th>
+                            <th>Tempo Total</th>
+                            <th>Status Emocional</th>
+                        </tr>
+                    </thead>
+                    <tbody></tbody>
+                </table>
             </div>
 
-            <div class="bloco-painel bloco-pais">
-                <h2 style="color: var(--neon-pais); margin-top: 0; font-size: 22px;"><i class="fa-solid fa-heart-pulse"></i> Espaço da Família (Simplificado)</h2>
-                <p style="color: #94a3b8; font-size: 15px; margin-bottom: 20px;">
-                    Acompanhe as vitórias e acertos do seu filho em tempo real de forma clara e visual!
-                </p>
-                <div class="cards-mini">
-                    <div class="card-dado">
-                        <h4 style="color: var(--neon-pais);">Total de Acertos</h4>
-                        <div class="num" id="pais-acertos" style="color: #00e676;">0</div>
-                    </div>
-                    <div class="card-dado">
-                        <h4>Taxa de Aproveitamento</h4>
-                        <div class="num" id="pais-aproveitamento" style="color: var(--neon-ouro);">0%</div>
-                    </div>
-                </div>
+            <div class="panel">
+                <div class="panel-title"><i class="fa-solid fa-shield-heart" style="color: var(--accent-pink);"></i> Vetores Cognitivos Avaliados</div>
+                <div class="vector-list" id="vector-container"></div>
             </div>
+        </div>
 
-            <div class="bloco-painel" style="border-top: 4px solid var(--neon-ouro);">
-                <h3 style="margin-top:0; font-size: 20px; color: var(--neon-ouro);"><i class="fa-solid fa-list-check"></i> Histórico Geral de Execuções</h3>
-                <div style="overflow-x: auto;">
-                    <table>
-                        <thead>
-                            <tr>
-                                <th>Nome do Aluno</th>
-                                <th>Vetor Cognitivo Coletado</th>
-                                <th>Tempo Exato</th>
-                                <th>Resultado Clínico</th>
-                            </tr>
-                        </thead>
-                        <tbody id="tabela-corpo">
-                            <tr><td colspan="4" style="text-align:center; color:#94a3b8;">Aguardando envio de dados...</td></tr>
-                        </tbody>
-                    </table>
-                </div>
+        <div class="panel">
+            <div class="panel-title"><i class="fa-solid fa-chart-line" style="color: var(--accent-green);"></i> Tendência de Resposta Cognitiva (Curva de Autonomia)</div>
+            <div class="chart-svg-box">
+                <svg viewBox="0 0 1000 150" width="100%" height="100%">
+                    <path class="trend-path" d="M50,120 Q250,90 500,60 T950,20" />
+                    <circle cx="50" cy="120" r="6" fill="var(--accent-pink)" />
+                    <circle cx="500" cy="60" r="6" fill="var(--accent-pink)" />
+                    <circle cx="950" cy="20" r="6" fill="var(--accent-pink)" />
+                    <text x="40" y="145" fill="var(--text-muted)" font-size="12">Semana 1</text>
+                    <text x="490" y="145" fill="var(--text-muted)" font-size="12">Semana 4</text>
+                    <text x="920" y="145" fill="var(--text-muted)" font-size="12">Sessão Atual</text>
+                </svg>
             </div>
         </div>
     </div>
 
-    <script type="module">
-        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-        import { initializeFirestore, persistentLocalCache, persistentMultipleTabManager, collection, query, orderBy, onSnapshot } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
-
-        const firebaseConfig = {
-            apiKey: "AIzaSyC8xX4K-RKCgJ0EEbQ00sKVkMWPDepshg8",
-            authDomain: "acessiquiz.firebaseapp.com",
-            projectId: "acessiquiz",
-            storageBucket: "acessiquiz.firebasestorage.app",
-            messagingSenderId: "938864321076",
-            appId: "1:938864321076:web:26d788b1ab95efc6d86061",
-            measurementId: "G-XZ9J8R2SJ9"
+    <script>
+        const userData = {
+            pedro: {
+                time: "2.4s",
+                timeSub: 'Redução de <span style="color:var(--accent-green);">-0.7s</span> vs média histórica',
+                accuracy: "85%",
+                accuracySub: 'Ganho de <span style="color:var(--accent-pink);">+7%</span> em relação à semana 1',
+                sessions: "14",
+                vectors: [
+                    { name: "Foco Atencional", val: 88, color: "var(--accent-green)" },
+                    { name: "Memória de Trabalho", val: 75, color: "var(--accent-pink)" },
+                    { name: "Flexibilidade Lógica", val: 90, color: "var(--accent-blue)" }
+                ],
+                history: [
+                    { date: "Hoje, 11:20", mod: "Pareamento de Formas", skill: "Discriminação Visual", time: "1m 45s", status: "Alta Resiliência" },
+                    { date: "09 Jun, 14:05", mod: "Agrupamento por Cores", skill: "Categorização Visual", time: "2m 10s", status: "Estável" },
+                    { date: "04 Jun, 10:15", mod: "Sequenciamento Lógico", skill: "Lógica Sequencial", time: "3m 02s", status: "Estável" }
+                ]
+            },
+            lucas: {
+                time: "3.1s",
+                timeSub: 'Estável com <span style="color:var(--accent-blue);">0.0s</span> de variação linear',
+                accuracy: "78%",
+                accuracySub: 'Evolução de <span style="color:var(--accent-green);">+3%</span> pós-fase de cores',
+                sessions: "9",
+                vectors: [
+                    { name: "Foco Atencional", val: 62, color: "var(--accent-green)" },
+                    { name: "Memória de Trabalho", val: 80, color: "var(--accent-pink)" },
+                    { name: "Flexibilidade Lógica", val: 74, color: "var(--accent-blue)" }
+                ],
+                history: [
+                    { date: "Ontem, 15:30", mod: "Sequenciamento Lógico", skill: "Lógica Sequencial", time: "2m 55s", status: "Estável" },
+                    { date: "05 Jun, 09:40", mod: "Pareamento de Formas", skill: "Discriminação Visual", time: "2m 15s", status: "Foco Oscilante" }
+                ]
+            }
         };
 
-        const app = initializeApp(firebaseConfig);
-        
-        // Ativação do Suporte Offline no Painel
-        const db = initializeFirestore(app, {
-            localCache: persistentLocalCache({
-                tabManager: persistentMultipleTabManager()
-            })
-        });
-
-        const ctx = document.getElementById('graficoEvolucao').getContext('2d');
-        const grafico = new Chart(ctx, {
-            type: 'line',
-            data: {
-                labels: [],
-                datasets: [{
-                    label: 'Tempo de Resposta (s)',
-                    data: [],
-                    borderColor: '#00e5ff',
-                    backgroundColor: 'rgba(0, 229, 255, 0.1)',
-                    borderWidth: 4,
-                    pointBackgroundColor: '#ffea00',
-                    pointRadius: 6,
-                    tension: 0.2,
-                    fill: true
-                }]
-            },
-            options: { 
-                responsive: true, 
-                plugins: { legend: { labels: { color: '#fff', font: { weight: 'bold' } } } },
-                scales: {
-                    x: { grid: { color: 'rgba(255,255,255,0.05)' }, ticks: { color: '#fff' } },
-                    y: { grid: { color: 'rgba(255,255,255,0.05)' }, ticks: { color: '#fff' } }
-                }
-            }
-        });
-
-        let ultimaSessaoID = "";
-
-        const q = query(collection(db, "telemetria_acessiquiz"), orderBy("horarioRegistro", "asc"));
-        
-        onSnapshot(q, (snapshot) => {
-            if(snapshot.empty) return;
-
-            const docsArray = snapshot.docs;
-            const ultimoReg = docsArray[docsArray.length - 1].data();
+        function renderData(userKey) {
+            const data = userData[userKey];
             
-            if(ultimoReg.sessaoID !== ultimaSessaoID) {
-                ultimaSessaoID = ultimoReg.sessaoID;
-                document.getElementById('nome-usuario-global').innerText = ultimoReg.alunoNome || "Anônimo";
-            }
+            document.getElementById("metric-time").innerText = data.time;
+            document.getElementById("metric-time-sub").innerHTML = data.timeSub;
+            document.getElementById("metric-accuracy").innerText = data.accuracy;
+            document.getElementById("metric-accuracy-sub").innerHTML = data.accuracySub;
+            document.getElementById("metric-sessions").innerText = data.sessions;
 
-            let somaTempos = 0;
-            let totalAcertos = 0;
-            let temposSessao = [];
-            let labelsSessao = [];
-            let tabelaHTML = "";
-
-            const invertido = [...docsArray].reverse();
-
-            snapshot.forEach(doc => {
-                const d = doc.data();
-                if(d.sessaoID === ultimaSessaoID) {
-                    const t = Number(d.tempoRespostaSegundos);
-                    if(!isNaN(t) && t > 0) {
-                        temposSessao.push(t);
-                        labelsSessao.push(`Nível ${d.nivel}`);
-                        somaTempos += t;
-                    }
-                    if(d.comportamentoAssertivo === true) {
-                        totalAcertos++;
-                    }
-                }
+            const vectorContainer = document.getElementById("vector-container");
+            vectorContainer.innerHTML = "";
+            data.vectors.forEach(v => {
+                vectorContainer.innerHTML += `
+                    <div class="vector-item">
+                        <div class="vector-info">
+                            <span>${v.name}</span>
+                            <span style="color: ${v.color}; font-weight: bold;">${v.val}%</span>
+                        </div>
+                        <div class="vector-bar-bg">
+                            <div class="vector-bar-fill" style="width: ${v.val}%; background-color: ${v.color};"></div>
+                        </div>
+                    </div>
+                `;
             });
 
-            invertido.forEach(doc => {
-                const d = doc.data();
-                const res = d.comportamentoAssertivo ? '<span class="badge-status" style="background:#00e676; color:#000;">Acerto ✅</span>' : '<span class="badge-status" style="background:#ff3d00; color:#fff;">Tentativa 🚀</span>';
-                tabelaHTML += `<tr><td style="font-weight:bold;">${d.alunoNome}</td><td style="color:#00e5ff;">${d.categoriaAEE || 'Geral'}</td><td>${Number(d.tempoRespostaSegundos || 0).toFixed(2)}s</td><td>${res}</td></tr>`;
+            const tbody = document.querySelector("#history-table tbody");
+            tbody.innerHTML = "";
+            data.history.forEach(h => {
+                const badgeClass = h.status.includes("Alta") || h.status.includes("Estável") ? "success" : "neutral";
+                tbody.innerHTML += `
+                    <tr>
+                        <td style="font-weight: 600;">${h.date}</td>
+                        <td>${h.mod}</td>
+                        <td style="color: var(--text-muted);">${h.skill}</td>
+                        <td>${h.time}</td>
+                        <td><span class="badge ${badgeClass}">${h.status}</span></td>
+                    </tr>
+                `;
             });
+        }
 
-            document.getElementById('tabela-corpo').innerHTML = tabelaHTML;
+        function changeUser() {
+            const select = document.getElementById("user-select");
+            renderData(select.value);
+        }
 
-            const totalRespondidos = temposSessao.length;
-            if(totalRespondidos > 0) {
-                const mediaCalculada = somaTempos / totalRespondidos;
-                document.getElementById('prof-tempo').innerText = `${mediaCalculada.toFixed(2)}s`;
-                document.getElementById('prof-estagios').innerText = totalRespondidos;
-                
-                document.getElementById('pais-acertos').innerText = totalAcertos;
-                const aproveitamento = (totalAcertos / totalRespondidos) * 100;
-                document.getElementById('pais-aproveitamento').innerText = `${aproveitamento.toFixed(0)}%`;
-
-                grafico.data.labels = labelsSessao;
-                grafico.data.datasets[0].data = temposSessao;
-                grafico.update();
-            } else {
-                document.getElementById('prof-tempo').innerText = "0.00s";
-                document.getElementById('prof-estagios').innerText = "0";
-                document.getElementById('pais-acertos').innerText = "0";
-                document.getElementById('pais-aproveitamento').innerText = "0%";
-            }
-        });
+        renderData("pedro");
     </script>
 </body>
 </html>
