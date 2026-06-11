@@ -12,9 +12,9 @@
             --bg-principal: #0b0f19;
             --bg-card: #161d30;
             --texto-claro: #ffffff;
-            --neon-prof: #00e5ff; /* Turquesa Neon */
-            --neon-pais: #ff007f; /* Rosa Choque */
-            --neon-ouro: #ffea00; /* Amarelo Ouro */
+            --neon-prof: #00e5ff;
+            --neon-pais: #ff007f;
+            --neon-ouro: #ffea00;
         }
 
         body {
@@ -153,7 +153,7 @@
 
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-        import { getFirestore, collection, query, orderBy, onSnapshot } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+        import { initializeFirestore, persistentLocalCache, persistentMultipleTabManager, collection, query, orderBy, onSnapshot } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 
         const firebaseConfig = {
             apiKey: "AIzaSyC8xX4K-RKCgJ0EEbQ00sKVkMWPDepshg8",
@@ -166,7 +166,13 @@
         };
 
         const app = initializeApp(firebaseConfig);
-        const db = getFirestore(app);
+        
+        // Ativação do Suporte Offline no Painel
+        const db = initializeFirestore(app, {
+            localCache: persistentLocalCache({
+                tabManager: persistentMultipleTabManager()
+            })
+        });
 
         const ctx = document.getElementById('graficoEvolucao').getContext('2d');
         const grafico = new Chart(ctx, {
@@ -264,4 +270,3 @@
     </script>
 </body>
 </html>
-
