@@ -60,7 +60,6 @@
             font-weight: 500;
         }
 
-        /* Área de Jogo */
         .game-zone {
             display: flex;
             flex-direction: column;
@@ -70,7 +69,6 @@
             min-height: 300px;
         }
 
-        /* Elementos Arrastáveis */
         .source-container {
             display: flex;
             gap: 25px;
@@ -83,7 +81,6 @@
             width: 100%;
         }
 
-        /* Alvos de Destino */
         .target-container {
             display: flex;
             gap: 40px;
@@ -93,7 +90,6 @@
             width: 100%;
         }
 
-        /* Estilização das Formas Geométricas (SVG e CSS) */
         .item {
             width: 90px;
             height: 90px;
@@ -101,7 +97,7 @@
             align-items: center;
             justify-content: center;
             cursor: grab;
-            transition: transform 0.2s, box-shadow 0.2s;
+            transition: transform 0.2s;
         }
 
         .item:active {
@@ -133,12 +129,10 @@
             border-style: solid;
         }
 
-        /* Classes de Cores Vibrantes */
         .color-blue { fill: var(--accent-blue); background-color: var(--accent-blue); border-radius: 12px; }
         .color-pink { fill: var(--accent-pink); background-color: var(--accent-pink); border-radius: 12px; }
         .color-green { fill: var(--accent-green); background-color: var(--accent-green); border-radius: 12px; }
 
-        /* Botão Próximo / Feedback */
         .feedback-btn {
             margin-top: 30px;
             background-color: var(--accent-pink);
@@ -159,7 +153,6 @@
             background-color: #e0006c;
         }
 
-        /* Interface do Professor / Telemetria Simples */
         .telemetry-panel {
             margin-top: 40px;
             padding-top: 20px;
@@ -178,7 +171,6 @@
             letter-spacing: 1px;
         }
 
-        /* Mapeamento de Sequências */
         .sequence-display {
             display: flex;
             gap: 15px;
@@ -214,22 +206,19 @@
         <p class="instructions" id="phase-instr">Arrasta a forma para o sítio correto!</p>
 
         <div class="game-zone">
-            <!-- Os elementos serão injetados dinamicamente via JS para mudar de fase -->
             <div class="source-container" id="source-zone"></div>
             <div class="target-container" id="target-zone"></div>
         </div>
 
         <button class="feedback-btn" id="next-btn" onclick="nextPhase()">Muito Bem! Próxima Fase ➔</button>
 
-        <!-- Painel demonstrativo da Telemetria Silenciosa para o Pitch -->
         <div class="telemetry-panel">
-            <div class="telemetry-title"><i class="fa-solid fa-chart-line"></i> Telemetria em Tempo Real (Painel do Professor)</div>
-            <p id="telemetry-log">A aguardar primeira interação... (Mapeando tempo de decisão e cliques errados sem estressar o aluno).</p>
+            <div class="telemetry-title">📊 Telemetria Oculta (Métricas para Pais/Professores)</div>
+            <p id="telemetry-log">A aguardar interação...</p>
         </div>
     </div>
 
     <script>
-        // Configuração das Fases do MVP (Zero Leitura)
         const phases = [
             {
                 title: "Fase 1: Pareamento de Formas",
@@ -241,14 +230,14 @@
                     { id: "triangulo", html: '<svg class="item color-green" viewBox="0 0 100 100"><polygon points="50,15 90,85 10,85"/></svg>' }
                 ],
                 targets: [
-                    { id: "circulo", label: "Círculo", stroke: '<circle cx="50" cy="50" r="38" stroke="#cbd5e1" stroke-width="4" fill="none" stroke-dasharray="6"/>' },
-                    { id: "triangulo", label: "Triângulo", stroke: '<polygon points="50,15 90,85 10,85" stroke="#cbd5e1" stroke-width="4" fill="none" stroke-dasharray="6"/>' },
-                    { id: "quadrado", label: "Quadrado", stroke: '<rect x="15" y="15" width="70" height="70" rx="10" stroke="#cbd5e1" stroke-width="4" fill="none" stroke-dasharray="6"/>' }
+                    { id: "circulo", stroke: '<circle cx="50" cy="50" r="38" stroke="#cbd5e1" stroke-width="4" fill="none" stroke-dasharray="6"/>' },
+                    { id: "triangulo", stroke: '<polygon points="50,15 90,85 10,85" stroke="#cbd5e1" stroke-width="4" fill="none" stroke-dasharray="6"/>' },
+                    { id: "quadrado", stroke: '<rect x="15" y="15" width="70" height="70" rx="10" stroke="#cbd5e1" stroke-width="4" fill="none" stroke-dasharray="6"/>' }
                 ]
             },
             {
                 title: "Fase 2: Agrupamento por Cores",
-                instr: "Separa os objetos guardando-os na caixa da mesma cor!",
+                instr: "Separa os blocos guardando-os na caixa da cor certa!",
                 type: "colors",
                 sources: [
                     { id: "pink-1", color: "pink", html: '<div class="item color-pink" style="width:60px; height:60px;"></div>' },
@@ -264,9 +253,9 @@
             },
             {
                 title: "Fase 3: Sequenciamento Lógico",
-                instr: "Qual é a cor que completa a sequência abaixo?",
+                instr: "Que cor completa a sequência?",
                 type: "sequence",
-                sequencePattern: ["blue", "pink", "blue"], // Padrão: Azul, Rosa, Azul, [?] -> Resposta: Rosa
+                sequencePattern: ["blue", "pink", "blue"], 
                 correctAnswer: "pink",
                 sources: [
                     { id: "green", color: "green", html: '<div class="item color-green" style="width:70px; height:70px;"></div>' },
@@ -284,8 +273,6 @@
         function loadPhase(index) {
             currentPhaseIndex = index;
             const phase = phases[index];
-            
-            // Reset de métricas da fase
             startTime = Date.now();
             wrongAttempts = 0;
             correctMatches = 0;
@@ -297,13 +284,11 @@
 
             const sourceZone = document.getElementById("source-zone");
             const targetZone = document.getElementById("target-zone");
-            
             sourceZone.innerHTML = "";
             targetZone.innerHTML = "";
             sourceZone.style.flexDirection = "row";
 
             if (phase.type === "shapes") {
-                // Renderizar objetos para arrastar (Embaralhados)
                 [...phase.sources].sort(() => Math.random() - 0.5).forEach(src => {
                     const div = document.createElement("div");
                     div.innerHTML = src.html;
@@ -314,7 +299,6 @@
                     sourceZone.appendChild(element);
                 });
 
-                // Renderizar alvos
                 phase.targets.forEach(tgt => {
                     const box = document.createElement("div");
                     box.className = "target-box";
@@ -323,9 +307,7 @@
                     setupTargetEvents(box);
                     targetZone.appendChild(box);
                 });
-
             } else if (phase.type === "colors") {
-                // Renderizar blocos coloridos
                 [...phase.sources].sort(() => Math.random() - 0.5).forEach(src => {
                     const div = document.createElement("div");
                     div.innerHTML = src.html;
@@ -337,7 +319,6 @@
                     sourceZone.appendChild(element);
                 });
 
-                // Renderizar caixas coloridas destino
                 phase.targets.forEach(tgt => {
                     const box = document.createElement("div");
                     box.className = "target-box";
@@ -347,10 +328,8 @@
                     setupTargetEvents(box);
                     targetZone.appendChild(box);
                 });
-
             } else if (phase.type === "sequence") {
                 sourceZone.style.flexDirection = "column";
-                // Renderizar linha da sequência em cima
                 const seqRow = document.createElement("div");
                 seqRow.className = "sequence-display";
                 
@@ -360,7 +339,6 @@
                     seqRow.appendChild(item);
                 });
 
-                // Adicionar o espaço vazio piscando para preencher
                 const blank = document.createElement("div");
                 blank.className = "target-box seq-blank";
                 blank.style.width = "80px";
@@ -368,13 +346,10 @@
                 blank.dataset.accept = phase.correctAnswer;
                 setupTargetEvents(blank);
                 seqRow.appendChild(blank);
-                
                 sourceZone.appendChild(seqRow);
 
-                // Opções de resposta em baixo (Zona de Alvos temporariamente usada para as opções clicáveis/arrastáveis)
                 const optionsContainer = document.createElement("div");
                 optionsContainer.className = "source-container";
-                
                 phase.sources.sort(() => Math.random() - 0.5).forEach(src => {
                     const div = document.createElement("div");
                     div.innerHTML = src.html;
@@ -389,10 +364,7 @@
             }
         }
 
-        // Funções de Drag and Drop API
-        function dragStart(e) {
-            e.dataTransfer.setData("text/plain", e.target.id);
-        }
+        function dragStart(e) { e.dataTransfer.setData("text/plain", e.target.id); }
 
         function setupTargetEvents(target) {
             target.addEventListener("dragover", (e) => e.preventDefault());
@@ -410,7 +382,6 @@
                 const itemValue = phases[currentPhaseIndex].type === "shapes" ? draggedId : draggedElement.dataset.color;
 
                 if (acceptedValue === itemValue) {
-                    // Acertou!
                     this.classList.add("correct");
                     if(phases[currentPhaseIndex].type === "sequence") {
                         this.classList.remove("seq-blank");
@@ -418,14 +389,10 @@
                     }
                     this.appendChild(draggedElement);
                     draggedElement.draggable = false;
-                    draggedElement.style.cursor = "default";
-                    
                     correctMatches++;
                     checkWinCondition();
                 } else {
-                    // Errou silenciosamente (Sem som punitivo ou tela vermelha agressiva!)
                     wrongAttempts++;
-                    draggedElement.style.transform = "shake 0.3s"; // Poderia adicionar um feedback visual suave
                     updateTelemetry();
                 }
             });
@@ -434,9 +401,7 @@
         function checkWinCondition() {
             const phase = phases[currentPhaseIndex];
             const requiredMatches = phase.type === "colors" ? phase.sources.length : (phase.type === "sequence" ? 1 : phase.targets.length);
-            
             updateTelemetry();
-
             if (correctMatches === requiredMatches) {
                 document.getElementById("next-btn").style.display = "inline-block";
                 if(currentPhaseIndex === phases.length - 1) {
@@ -447,27 +412,18 @@
 
         function updateTelemetry() {
             const timeSpent = ((Date.now() - startTime) / 1000).toFixed(1);
-            const log = `Fase Atual: ${currentPhaseIndex + 1} | Tempo de Decisão: ${timeSpent}s | Toques/Arrastes Incorretos: ${wrongAttempts} | Sucesso Cognitivo: ${correctMatches}`;
-            document.getElementById("telemetry-log").innerText = log;
+            document.getElementById("telemetry-log").innerText = `Tempo de Decisão: ${timeSpent}s | Padrões de Erro Omissos: ${wrongAttempts} | Sucessos Cognitivos: ${correctMatches}/3`;
         }
 
         function nextPhase() {
-            if (currentPhaseIndex < phases.length - 1) {
-                loadPhase(currentPhaseIndex + 1);
-            } else {
-                // Reiniciar o ciclo do MVP para demonstração
-                loadPhase(0);
-            }
+            if (currentPhaseIndex < phases.length - 1) loadPhase(currentPhaseIndex + 1);
+            else loadPhase(0);
         }
 
-        // Atualizar contador de tempo de forma transparente na telemetria
         setInterval(() => {
-            if(document.getElementById("next-btn").style.display !== "inline-block") {
-                updateTelemetry();
-            }
+            if(document.getElementById("next-btn").style.display !== "inline-block") updateTelemetry();
         }, 1000);
 
-        // Inicializar o jogo
         loadPhase(0);
     </script>
 </body>
