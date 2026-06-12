@@ -3,74 +3,275 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AcessiQuiz - Dashboard Especialista</title>
+    <title>AcessiQuiz - Módulo de Pareamento Inclusivo</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <style>
         :root {
-            --bg: #020617;
-            --card: #0b0f19;
-            --neon: #00ffaa;
-            --pink: #ff007f;
-            --blue: #38bdf8;
+            --bg-color: #0b0f19;
+            --card-bg: #1e293b;
+            --accent-green: #00ffaa;
+            --accent-pink: #ff007f;
+            --accent-blue: #3a86ff;
+            --text-color: #f8fafc;
+            --text-muted: #cbd5e1;
         }
-        body { background: var(--bg); color: white; font-family: sans-serif; padding: 40px; }
-        .grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 20px; }
-        .card { background: var(--card); padding: 30px; border-radius: 20px; border: 1px solid rgba(255,255,255,0.1); }
-        h1 { color: var(--neon); margin-bottom: 40px; }
-        .val { font-size: 48px; font-weight: bold; display: block; margin: 10px 0; }
-        .label { color: #94a3b8; text-transform: uppercase; font-size: 14px; letter-spacing: 1px; }
-        table { width: 100%; margin-top: 40px; border-collapse: collapse; }
-        th { text-align: left; color: var(--blue); padding: 15px; border-bottom: 2px solid #1e293b; }
-        td { padding: 15px; border-bottom: 1px solid #1e293b; color: #cbd5e1; }
-        .status { color: var(--neon); font-weight: bold; }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            user-select: none;
+            -webkit-user-select: none;
+        }
+
+        body {
+            background-color: #020617;
+            color: var(--text-color);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .game-container {
+            width: 100%;
+            max-width: 800px;
+            background-color: var(--card-bg);
+            border-radius: 24px;
+            padding: 40px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.4);
+            border: 2px solid rgba(0, 255, 170, 0.1);
+            text-align: center;
+            position: relative;
+        }
+
+        h1 {
+            color: var(--accent-green);
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .instructions {
+            color: var(--text-muted);
+            font-size: 1.2rem;
+            margin-bottom: 30px;
+            font-weight: 500;
+        }
+
+        .game-zone {
+            display: flex;
+            justify-content: space-between;
+            padding: 20px 60px;
+            min-height: 350px;
+            position: relative;
+        }
+
+        .column {
+            display: flex;
+            flex-direction: column;
+            justify-content: space-around;
+            z-index: 2;
+        }
+
+        .item {
+            width: 90px;
+            height: 90px;
+            background: #0b0f19;
+            border: 3px solid rgba(255, 255, 255, 0.1);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 45px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .item.selected {
+            border-color: var(--accent-blue);
+            box-shadow: 0 0 20px var(--accent-blue);
+            transform: scale(1.1);
+        }
+
+        .item.matched {
+            border-color: var(--accent-green);
+            opacity: 0.5;
+            cursor: default;
+        }
+
+        .item.shadow-item {
+            filter: brightness(0) invert(1) opacity(0.25);
+        }
+
+        /* Camada Invisível de desenho das Linhas SVG */
+        #connections-layer {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 1;
+        }
+
+        .feedback-btn {
+            margin-top: 30px;
+            background-color: var(--accent-pink);
+            color: white;
+            border: none;
+            padding: 15px 40px;
+            font-size: 1.2rem;
+            font-weight: bold;
+            border-radius: 50px;
+            cursor: pointer;
+            display: none;
+            box-shadow: 0 8px 20px rgba(255, 0, 127, 0.3);
+            animation: pulse 1.5s infinite;
+        }
+
+        .telemetry-panel {
+            margin-top: 40px;
+            padding-top: 20px;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            text-align: left;
+            font-size: 0.9rem;
+            color: var(--text-muted);
+        }
+
+        .telemetry-title {
+            color: var(--accent-blue);
+            font-weight: bold;
+            margin-bottom: 5px;
+            text-transform: uppercase;
+            font-size: 0.8rem;
+            letter-spacing: 1px;
+        }
     </style>
 </head>
 <body>
-    <h1><i class="fa-solid fa-brain"></i> Portal do Especialista: Telemetria Visual</h1>
-    
-    <div class="grid">
-        <div class="card">
-            <span class="label">Tempo Médio de Ligação</span>
-            <span class="val" style="color: var(--blue);">1.8s</span>
-            <span style="color: var(--neon);">▼ 15% mais rápido</span>
+
+    <div class="game-container">
+        <h1>Pareamento Visual</h1>
+        <p class="instructions">Toque numa fruta da esquerda e depois na sua sombra correspondente!</p>
+
+        <div class="game-zone" id="game-zone-area">
+            <svg id="connections-layer"></svg>
+            
+            <div class="column" id="left-column">
+                <div class="item" data-id="apple" onclick="handleItemClick(this, 'left')"><i class="fa-solid fa-apple-whole" style="color: #ff4d4d;"></i></div>
+                <div class="item" data-id="lemon" onclick="handleItemClick(this, 'left')"><i class="fa-solid fa-lemon" style="color: #f1c40f;"></i></div>
+                <div class="item" data-id="carrot" onclick="handleItemClick(this, 'left')"><i class="fa-solid fa-carrot" style="color: #e67e22;"></i></div>
+            </div>
+
+            <div class="column" id="right-column">
+                <div class="item shadow-item" data-id="lemon" onclick="handleItemClick(this, 'right')"><i class="fa-solid fa-lemon"></i></div>
+                <div class="item shadow-item" data-id="apple" onclick="handleItemClick(this, 'right')"><i class="fa-solid fa-apple-whole"></i></div>
+                <div class="item shadow-item" data-id="carrot" onclick="handleItemClick(this, 'right')"><i class="fa-solid fa-carrot"></i></div>
+            </div>
         </div>
-        <div class="card">
-            <span class="label">Erros de Discriminação</span>
-            <span class="val" style="color: var(--pink);">2</span>
-            <span style="color: #94a3b8;">Sessão: Pareamento Sombras</span>
-        </div>
-        <div class="card">
-            <span class="label">Sessões Concluídas</span>
-            <span class="val" style="color: var(--neon);">12</span>
-            <span style="color: #94a3b8;">Usuário Ativo: Pedro</span>
+
+        <button class="feedback-btn" id="next-btn" onclick="restartGame()">🏆 Nível Concluído! Jogar Novamente</button>
+
+        <div class="telemetry-panel">
+            <div class="telemetry-title">内外 Telemetria Silenciosa (Análise do Especialista)</div>
+            <p>Estado: <span id="log-status" style="color: var(--accent-green)">Aguardando interação ativa...</span></p>
+            <p style="margin-top: 5px;">Tempo de Decisão: <span id="timer-log" style="color: #fff;">0.0s</span> | Erros de Discriminação: <span id="error-log" style="color: var(--accent-pink);">0</span></p>
         </div>
     </div>
 
-    <table>
-        <thead>
-            <tr>
-                <th>Data</th>
-                <th>Exercício</th>
-                <th>Habilidade Avaliada</th>
-                <th>Desempenho</th>
-            </tr>
-        </thead>
-        <tbody>
-            <tr>
-                <td>11/06/2026</td>
-                <td>Pareamento Frutas-Sombras</td>
-                <td>Discriminação Visual</td>
-                <td class="status">Excelente</td>
-            </tr>
-            <tr>
-                <td>09/06/2026</td>
-                <td>Sequenciamento de Cores</td>
-                <td>Lógica Lúdica</td>
-                <td class="status">Estável</td>
-            </tr>
-        </tbody>
-    </table>
+    <script>
+        let selectedLeft = null;
+        let startTime = Date.now();
+        let wrongAttempts = 0;
+        let correctMatches = 0;
+        const totalTargets = 3;
+
+        function handleItemClick(element, columnSide) {
+            if (element.classList.contains('matched')) return;
+
+            if (columnSide === 'left') {
+                // Seleção na coluna da esquerda
+                if (selectedLeft) selectedLeft.classList.remove('selected');
+                selectedLeft = element;
+                element.classList.add('selected');
+                document.getElementById('log-status').innerText = "Objeto selecionado. Buscando correspondência...";
+            } else {
+                // Clique na coluna da direita para tentar ligar
+                if (!selectedLeft) {
+                    document.getElementById('log-status').innerText = "Toque primeiro numa fruta colorida da esquerda!";
+                    return;
+                }
+
+                // Verifica se os IDs coincidem (Acertou)
+                if (selectedLeft.dataset.id === element.dataset.id) {
+                    drawConnectingLine(selectedLeft, element);
+                    
+                    selectedLeft.classList.add('matched');
+                    element.classList.add('matched');
+                    selectedLeft.classList.remove('selected');
+                    
+                    selectedLeft = null;
+                    correctMatches++;
+                    document.getElementById('log-status').innerText = "Conexão correta estabelecida!";
+                    
+                    if (correctMatches === totalTargets) {
+                        document.getElementById('next-btn').style.display = "inline-block";
+                        document.getElementById('log-status').innerText = "Sessão concluída com sucesso!";
+                    }
+                } else {
+                    // Errou o par
+                    wrongAttempts++;
+                    document.getElementById('error-log').innerText = wrongAttempts;
+                    document.getElementById('log-status').innerText = "Associação incorreta. Analisando hesitação...";
+                    
+                    element.style.borderColor = "var(--accent-pink)";
+                    setTimeout(() => {
+                        if (!element.classList.contains('matched')) {
+                            element.style.borderColor = "rgba(255, 255, 255, 0.1)";
+                        }
+                    }, 500);
+                }
+            }
+        }
+
+        function drawConnectingLine(leftEl, rightEl) {
+            const svg = document.getElementById('connections-layer');
+            const rectLeft = leftEl.getBoundingClientRect();
+            const rectRight = rightEl.getBoundingClientRect();
+            const containerRect = document.getElementById('game-zone-area').getBoundingClientRect();
+
+            const line = document.createElementNS("http://www.w3.org/2000/svg", "line");
+            
+            // Calcula o centro exato de cada círculo relativo à área do jogo
+            line.setAttribute("x1", rectLeft.left + rectLeft.width / 2 - containerRect.left);
+            line.setAttribute("y1", rectLeft.top + rectLeft.height / 2 - containerRect.top);
+            line.setAttribute("x2", rectRight.left + rectRight.width / 2 - containerRect.left);
+            line.setAttribute("y2", rectRight.top + rectRight.height / 2 - containerRect.top);
+            
+            line.setAttribute("stroke", "var(--accent-green)");
+            line.setAttribute("stroke-width", "5");
+            line.setAttribute("stroke-linecap", "round");
+            line.setAttribute("stroke-dasharray", "8, 6");
+            
+            svg.appendChild(line);
+        }
+
+        function restartGame() {
+            location.reload();
+        }
+
+        // Atualização do Cronómetro de Decisão
+        setInterval(() => {
+            if (correctMatches < totalTargets) {
+                const elapsed = ((Date.now() - startTime) / 1000).toFixed(1);
+                document.getElementById('timer-log').innerText = elapsed + "s";
+            }
+        }, 100);
+    </script>
 </body>
 </html>
-
-Agora o sistema está à prova de falhas. **Pode testar no celular!** Clique na Maçã, depois na sombra da Maçã. A linha vai aparecer e a telemetria vai registrar o acerto. Sucesso garantido para o Pitch!
