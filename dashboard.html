@@ -2,340 +2,123 @@
 <html lang="pt-BR">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AcessiQuiz - Dashboard de Telemetria Neuroinclusiva</title>
+    <title>AcessiQuiz Pro - Dashboard Analítico</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <style>
-        :root {
-            --bg-color: #020617;
-            --panel-bg: #0b0f19;
-            --card-bg: #1e293b;
-            --accent-green: #00ffaa;
-            --accent-pink: #ff007f;
-            --accent-blue: #38bdf8;
-            --text-color: #f8fafc;
-            --text-muted: #94a3b8;
-            --border-color: rgba(255, 255, 255, 0.08);
+        :root { 
+            --bg: #060913; 
+            --card: #0d1321; 
+            --green: #00ffaa; 
+            --pink: #ff007f; 
+            --blue: #38bdf8; 
+            --text: #f1f5f9; 
+            --muted: #64748b; 
         }
-
-        * {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-            font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
-        }
-
-        body {
-            background-color: var(--bg-color);
-            color: var(--text-color);
-            display: flex;
-            min-height: 100vh;
-        }
-
-        .sidebar {
-            width: 260px;
-            background-color: var(--panel-bg);
-            border-right: 1px solid var(--border-color);
-            padding: 30px 20px;
-            display: flex;
-            flex-direction: column;
-            gap: 40px;
-        }
-
-        .brand {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            font-size: 1.4rem;
-            font-weight: bold;
-            color: var(--accent-green);
-            letter-spacing: 1px;
-        }
-
-        .menu-list {
-            list-style: none;
-            display: flex;
-            flex-direction: column;
-            gap: 10px;
-        }
-
-        .menu-item {
-            display: flex;
-            align-items: center;
-            gap: 15px;
-            padding: 14px 18px;
-            color: var(--text-muted);
-            text-decoration: none;
-            border-radius: 12px;
-            font-weight: 500;
-            transition: all 0.2s;
-        }
-
-        .menu-item.active {
-            border-left: 4px solid var(--accent-pink);
-            background-color: rgba(255, 0, 127, 0.05);
-            color: var(--text-color);
-        }
-
-        .main-content {
-            flex-grow: 1;
-            padding: 40px;
-            overflow-y: auto;
-            max-width: 1400px;
-            margin: 0 auto;
-            width: 100%;
-        }
-
-        header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 35px;
-        }
-
-        h1 { font-size: 2.2rem; font-weight: 700; }
-
-        .user-selector {
-            background-color: var(--card-bg);
-            color: var(--text-color);
-            border: 1px solid var(--border-color);
-            padding: 10px 20px;
-            border-radius: 12px;
-            font-size: 1rem;
-            outline: none;
-            cursor: pointer;
-        }
-
-        .metrics-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
-            gap: 25px;
-            margin-bottom: 40px;
-        }
-
-        .card {
-            background-color: var(--panel-bg);
-            border: 1px solid var(--border-color);
-            border-radius: 20px;
-            padding: 25px;
-            display: flex;
-            flex-direction: column;
-            gap: 15px;
-            position: relative;
-        }
-
-        .card::before {
-            content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 4px;
-        }
-        .card.green::before { background-color: var(--accent-green); }
-        .card.pink::before { background-color: var(--accent-pink); }
-        .card.blue::before { background-color: var(--accent-blue); }
-
-        .card-header {
-            display: flex; justify-content: space-between; align-items: center;
-            color: var(--text-muted); font-weight: 600; font-size: 0.95rem;
-        }
-
-        .card-value { font-size: 2.2rem; font-weight: 700; }
-        .card-subtext { font-size: 0.85rem; color: var(--text-muted); }
-
-        .dashboard-row {
-            display: grid;
-            grid-template-columns: 1.6fr 1fr;
-            gap: 30px;
-            margin-bottom: 40px;
-        }
-
-        .panel {
-            background-color: var(--panel-bg);
-            border: 1px solid var(--border-color);
-            border-radius: 20px;
-            padding: 30px;
-        }
-
-        .panel-title {
-            font-size: 1.2rem; font-weight: 600; margin-bottom: 25px;
-            display: flex; align-items: center; gap: 10px;
-        }
-
-        table { width: 100%; border-collapse: collapse; text-align: left; }
-        th { padding: 14px; color: var(--text-muted); font-size: 0.9rem; border-bottom: 2px solid var(--border-color); }
-        td { padding: 16px 14px; font-size: 0.95rem; border-bottom: 1px solid var(--border-color); }
-
-        .badge { padding: 6px 12px; border-radius: 20px; font-size: 0.8rem; font-weight: bold; }
-        .badge.success { background-color: rgba(0, 255, 170, 0.1); color: var(--accent-green); }
-        .badge.neutral { background-color: rgba(56, 189, 248, 0.1); color: var(--accent-blue); }
-
-        .vector-list { display: flex; flex-direction: column; gap: 20px; }
-        .vector-item { display: flex; flex-direction: column; gap: 8px; }
-        .vector-info { display: flex; justify-content: space-between; font-size: 0.95rem; }
-        .vector-bar-bg { height: 12px; background-color: var(--card-bg); border-radius: 6px; overflow: hidden; }
-        .vector-bar-fill { height: 100%; border-radius: 6px; transition: width 0.6s cubic-bezier(0.4, 0, 0.2, 1); }
-        .chart-svg-box { width: 100%; height: 180px; margin-top: 15px; }
+        body { background: var(--bg); color: var(--text); font-family: -apple-system, BlinkMacSystemFont, sans-serif; padding: 40px; }
+        .wrapper { max-width: 1100px; margin: 0 auto; }
         
-        .trend-path {
-            fill: none; stroke: var(--accent-green); stroke-width: 4;
-            stroke-dasharray: 1000; stroke-dashoffset: 1000;
-            animation: drawLine 2s forwards ease-in-out;
-        }
-        @keyframes drawLine { to { stroke-dashoffset: 0; } }
+        header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 40px; border-bottom: 1px solid rgba(255,255,255,0.05); padding-bottom: 20px; }
+        .user-badge { background: var(--card); padding: 10px 20px; border-radius: 12px; border: 1px solid var(--green); color: var(--green); font-weight: 700; }
+        
+        /* TABS */
+        .tabs { display: flex; gap: 10px; margin-bottom: 30px; }
+        .tab { padding: 12px 24px; background: rgba(255,255,255,0.03); border-radius: 12px; cursor: pointer; font-weight: 600; border: 1px solid transparent; color: var(--muted); }
+        .tab.active { background: var(--card); border-color: var(--blue); color: var(--blue); }
+
+        /* VIEW PANELS */
+        .view-panel { display: none; }
+        .view-panel.active { display: block; }
+
+        .grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; }
+        .card { background: var(--card); padding: 25px; border-radius: 20px; border: 1px solid rgba(255,255,255,0.05); }
+        .val { font-size: 32px; font-weight: bold; display: block; margin: 10px 0; }
+        .label { color: var(--muted); font-size: 11px; text-transform: uppercase; letter-spacing: 0.5px; }
+
+        .chart-box { background: var(--card); border-radius: 24px; padding: 30px; margin-top: 20px; border: 1px solid rgba(255,255,255,0.05); }
+        .bar-track { height: 8px; background: #1a1a2e; border-radius: 10px; margin-top: 15px; overflow: hidden; }
+        .bar-fill { height: 100%; border-radius: 10px; }
+        
+        .medal-box { display: flex; gap: 15px; margin-top: 20px; }
+        .medal { width: 60px; height: 60px; background: rgba(255,255,255,0.05); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 1.5rem; color: #ffaa00; border: 2px solid #ffaa00; }
     </style>
 </head>
 <body>
-
-    <div class="sidebar">
-        <div class="brand"><i class="fa-solid fa-brain"></i> AcessiQuiz Cloud</div>
-        <ul class="menu-list">
-            <li><a href="#" class="menu-item active"><i class="fa-solid fa-chart-pie"></i> Visão Geral</a></li>
-            <li><a href="#" class="menu-item"><i class="fa-solid fa-user-check"></i> Usuários Ativos</a></li>
-            <li><a href="#" class="menu-item"><i class="fa-solid fa-database"></i> Repositório (100+)</a></li>
-        </ul>
-    </div>
-
-    <div class="main-content">
+    <div class="wrapper">
         <header>
             <div>
-                <h1>Painel do Especialista</h1>
-                <p style="color: var(--text-muted); margin-top: 5px;">Mapeamento clínico sem expor ou frustrar o estudante.</p>
+                <h1 style="margin:0; font-size: 1.8rem; color: var(--green);">Portal AcessiQuiz Pro</h1>
+                <p style="color: var(--muted); font-size: 0.9rem;">Relatório consolidado de treinamento neurocognitivo.</p>
             </div>
-            <div>
-                <select class="user-selector" id="user-select" onchange="changeUser()">
-                    <option value="pedro">Usuário Ativo: Pedro Silva (TEA)</option>
-                    <option value="lucas">Usuário Ativo: Lucas Santos (TDAH)</option>
-                </select>
-            </div>
+            <div class="user-badge"><i class="fa-solid fa-user"></i> <span id="display-name">Carregando...</span></div>
         </header>
 
-        <div class="metrics-grid">
-            <div class="card green">
-                <div class="card-header">Tempo Médio de Ligação <i class="fa-solid fa-clock"></i></div>
-                <div class="card-value" id="metric-time">1.8s</div>
-                <div class="card-subtext" id="metric-time-sub"></div>
+        <div class="tabs">
+            <div class="tab active" onclick="switchView('pro', this)">PAINEL PROFISSIONAL</div>
+            <div class="tab" onclick="switchView('pais', this)">PAINEL DOS PAIS</div>
+        </div>
+
+        <div id="view-pro" class="view-panel active">
+            <div class="grid">
+                <div class="card"><span class="label">Latência Psicomotora</span><span class="val" style="color: var(--blue);">1.42s</span><span style="font-size:0.8rem; color:var(--green);">-0.3s vs média</span></div>
+                <div class="card"><span class="label">Padrão de Erros</span><span class="val" style="color: var(--pink);">Ocasional</span><span style="font-size:0.8rem;">Estabilidade de foco alta</span></div>
+                <div class="card"><span class="label">Vetor Cognitivo</span><span class="val">Adaptativo</span><span style="font-size:0.8rem;">Fase: Sequenciamento</span></div>
             </div>
-            <div class="card pink">
-                <div class="card-header">Erros de Discriminação <i class="fa-solid fa-bullseye"></i></div>
-                <div class="card-value" id="metric-accuracy">2</div>
-                <div class="card-subtext" id="metric-accuracy-sub"></div>
-            </div>
-            <div class="card blue">
-                <div class="card-header">Sessões Concluídas <i class="fa-solid fa-gamepad"></i></div>
-                <div class="card-value" id="metric-sessions">12</div>
-                <div class="card-subtext">Constância ativa linear mantida</div>
+            <div class="chart-box">
+                <h3 style="font-size: 1rem; margin-bottom: 20px;">Desempenho por Competência Técnica</h3>
+                <div style="margin-bottom: 15px;"><span>Discriminação Visual</span><div class="bar-track"><div class="bar-fill" style="width: 92%; background: var(--green);"></div></div></div>
+                <div style="margin-bottom: 15px;"><span>Controle Inibitório</span><div class="bar-track"><div class="bar-fill" style="width: 85%; background: var(--blue);"></div></div></div>
+                <div><span>Memória de Trabalho</span><div class="bar-track"><div class="bar-fill" style="width: 70%; background: var(--pink);"></div></div></div>
             </div>
         </div>
 
-        <div class="dashboard-row">
-            <div class="panel">
-                <div class="panel-title"><i class="fa-solid fa-history" style="color: var(--accent-blue);"></i> Relatórios Pós-Sessão Coletados</div>
-                <table id="history-table">
-                    <thead>
-                        <tr>
-                            <th>Data/Hora</th>
-                            <th>Exercício Aplicado</th>
-                            <th>Habilidade Mapeada</th>
-                            <th>Tempo Total</th>
-                            <th>Status Emocional</th>
-                        </tr>
-                    </thead>
-                    <tbody></tbody>
-                </table>
+        <div id="view-pais" class="view-panel">
+            <div class="grid">
+                <div class="card">
+                    <span class="label">Nível de Autonomia</span>
+                    <span class="val" style="color: var(--green);">Excelente</span>
+                    <span style="font-size:0.85rem;"><span class="parent-user-name">O aluno</span> fez quase tudo sozinho!</span>
+                </div>
+                <div class="card"><span class="label">Tempo de Treino</span><span class="val" style="color: var(--blue);">12 min</span><span>Sessão produtiva e calma.</span></div>
+                <div class="card"><span class="label">Humor do Jogo</span><span class="val" style="color: var(--pink);">Radiante</span><span>Foco total nas atividades.</span></div>
             </div>
-
-            <div class="panel">
-                <div class="panel-title"><i class="fa-solid fa-shield-heart" style="color: var(--accent-pink);"></i> Vetores Cognitivos Mapeados</div>
-                <div class="vector-list" id="vector-container"></div>
-            </div>
-        </div>
-
-        <div class="panel">
-            <div class="panel-title"><i class="fa-solid fa-chart-line" style="color: var(--accent-green);"></i> Tendência de Resposta Visual (Curva de Redução de Hesitação)</div>
-            <div class="chart-svg-box">
-                <svg viewBox="0 0 1000 150" width="100%" height="100%">
-                    <path class="trend-path" d="M50,120 Q250,90 500,60 T950,20" />
-                    <circle cx="50" cy="120" r="6" fill="var(--accent-pink)" />
-                    <circle cx="500" cy="60" r="6" fill="var(--accent-pink)" />
-                    <circle cx="950" cy="20" r="6" fill="var(--accent-pink)" />
-                    <text x="40" y="145" fill="var(--text-muted)" font-size="12">Semana 1</text>
-                    <text x="490" y="145" fill="var(--text-muted)" font-size="12">Semana 4</text>
-                    <text x="920" y="145" fill="var(--text-muted)" font-size="12">Sessão Atual</text>
-                </svg>
+            <div class="chart-box">
+                <h3 style="font-size: 1rem; margin-bottom: 10px;">Conquistas de Hoje</h3>
+                <div class="medal-box">
+                    <div class="medal" title="Foco de Águia"><i class="fa-solid fa-eye"></i></div>
+                    <div class="medal" title="Mestre das Cores"><i class="fa-solid fa-palette"></i></div>
+                    <div class="medal" style="color: var(--blue); border-color: var(--blue);" title="Persistência"><i class="fa-solid fa-rocket"></i></div>
+                </div>
+                <p style="margin-top: 20px; color: var(--muted); font-style: italic;">
+                    "O progresso visual de <span class="parent-user-name">conclusão</span> está 15% melhor que na semana passada. Parabéns pela dedicação!"
+                </p>
             </div>
         </div>
     </div>
 
     <script>
-        const userData = {
-            pedro: {
-                time: "1.8s",
-                timeSub: 'Redução de <span style="color:var(--accent-green);">-0.6s</span> na hesitação motora',
-                accuracy: "2",
-                accuracySub: 'Foco mantido dentro do padrão esperado',
-                sessions: "12",
-                vectors: [
-                    { name: "Discriminação de Formas", val: 92, color: "var(--accent-green)" },
-                    { name: "Atenção Sustentada", val: 78, color: "var(--accent-pink)" },
-                    { name: "Processamento Visual", val: 85, color: "var(--accent-blue)" }
-                ],
-                history: [
-                    { date: "Hoje, 11:20", mod: "Pareamento Frutas-Sombras", skill: "Discriminação Visual", time: "1m 12s", status: "Excelente" },
-                    { date: "09 Jun, 14:05", mod: "Sequenciamento de Cores", skill: "Lógica Sequencial", time: "2m 04s", status: "Estável" }
-                ]
-            },
-            lucas: {
-                time: "2.9s",
-                timeSub: 'Variação sutil de <span style="color:var(--accent-blue);">+0.2s</span> linear',
-                accuracy: "5",
-                accuracySub: 'Redução de erros após estímulo de cores',
-                sessions: "8",
-                vectors: [
-                    { name: "Discriminação de Formas", val: 68, color: "var(--accent-green)" },
-                    { name: "Atenção Sustentada", val: 84, color: "var(--accent-pink)" },
-                    { name: "Processamento Visual", val: 70, color: "var(--accent-blue)" }
-                ],
-                history: [
-                    { date: "Ontem, 15:30", mod: "Pareamento Frutas-Sombras", skill: "Discriminação Visual", time: "2m 32s", status: "Estável" },
-                    { date: "05 Jun, 09:40", mod: "Encaixe Lógico de Blocos", skill: "Coordenação Fina", time: "3m 10s", status: "Hesitação Leve" }
-                ]
-            }
-        };
-
-        function renderData(userKey) {
-            const data = userData[userKey];
-            document.getElementById("metric-time").innerText = data.time;
-            document.getElementById("metric-time-sub").innerHTML = data.timeSub;
-            document.getElementById("metric-accuracy").innerText = data.accuracy;
-            document.getElementById("metric-accuracy-sub").innerHTML = data.accuracySub;
-            document.getElementById("metric-sessions").innerText = data.sessions;
-
-            const vectorContainer = document.getElementById("vector-container");
-            vectorContainer.innerHTML = "";
-            data.vectors.forEach(v => {
-                vectorContainer.innerHTML += `
-                    <div class="vector-item">
-                        <div class="vector-info"><span>${v.name}</span><span style="color: ${v.color}; font-weight: bold;">${v.val}%</span></div>
-                        <div class="vector-bar-bg"><div class="vector-bar-fill" style="width: ${v.val}%; background-color: ${v.color};"></div></div>
-                    </div>`;
-            });
-
-            const tbody = document.querySelector("#history-table tbody");
-            tbody.innerHTML = "";
-            data.history.forEach(h => {
-                const badgeClass = h.status.includes("Excelente") || h.status.includes("Estável") ? "success" : "neutral";
-                tbody.innerHTML += `
-                    <tr>
-                        <td style="font-weight: 600;">${h.date}</td>
-                        <td>${h.mod}</td>
-                        <td style="color: var(--text-muted);">${h.skill}</td>
-                        <td>${h.time}</td>
-                        <td><span class="badge ${badgeClass}">${h.status}</span></td>
-                    </tr>`;
+        window.onload = function() {
+            // Captura o nome inserido no jogo (padrão "Usuário Convidado" caso acesse direto)
+            const name = localStorage.getItem('acessiquiz_user') || "Usuário Convidado";
+            
+            // Atualiza o crachá do cabeçalho
+            document.getElementById('display-name').innerText = name;
+            
+            // Corrige e atualiza dinamicamente os textos no Painel dos Pais
+            document.querySelectorAll('.parent-user-name').forEach(el => {
+                if (el.innerText === "conclusão") {
+                    el.innerText = name; // Insere o nome na frase de progresso
+                } else {
+                    el.innerText = name; // Insere o nome na caixa de autonomia
+                }
             });
         }
 
-        function changeUser() {
-            renderData(document.getElementById("user-select").value);
+        function switchView(view, tabEl) {
+            document.querySelectorAll('.view-panel').forEach(p => p.classList.remove('active'));
+            document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+            document.getElementById('view-' + view).classList.add('active');
+            tabEl.classList.add('active');
         }
-        renderData("pedro");
     </script>
 </body>
 </html>
