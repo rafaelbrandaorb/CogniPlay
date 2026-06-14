@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>AcessiQuiz - Jogo Integrado</title>
+    <title>AcessiQuiz - Edição 5 Atividades</title>
     <style>
         :root {
             --bg-gradient: linear-gradient(135deg, #0f172a 0%, #1e1b4b 100%);
@@ -55,8 +55,8 @@
 
     <div id="login-screen">
         <span class="login-icon">🎮</span>
-        <h2>AcessiQuiz </h2>
-        <p>Insira o nome do aluno para iniciar.</p>
+        <h2>AcessiQuiz</h2>
+        <p>Insira o nome do aluno para iniciar a jornada.</p>
         <div class="input-group">
             <input type="text" id="username" placeholder="Nome do Aluno" autocomplete="off">
         </div>
@@ -66,7 +66,7 @@
     <div class="impulse-container" id="game-container">
         <div class="progress-bar-container"><div class="progress-bar-fill" id="progress-indicator"></div></div>
         <h1 id="phase-title">Carregando...</h1>
-        <p class="subtitle" id="phase-desc">Carregando...</p>
+        <p class="subtitle" id="phase-desc">Ligue as figuras correspondentes!</p>
         
         <div class="game-canvas" id="canvas-area">
             <svg id="lines-layer"></svg>
@@ -74,7 +74,7 @@
             <div class="column" id="right-nodes"></div>
         </div>
         
-        <button class="action-btn" id="next-action-btn" onclick="advancePhase()">Próxima Fase ➔</button>
+        <button class="action-btn" id="next-action-btn" onclick="advancePhase()">Próxima Atividade ➔</button>
         
         <div class="telemetry-overlay">
             👤 Aluno: <span id="current-user-display" style="color: var(--neon-blue); font-weight: bold;">---</span><br>
@@ -84,9 +84,33 @@
 
     <script>
         const borderColors = ["blue", "pink", "green", "yellow", "purple"];
+        
         const gamePhases = [
-            { title: "Pareamento de Frutas", desc: "Ligue as frutas iguais!", items: [{ id: "a", content: "🍎", type: "emoji" }, { id: "b", content: "🍌", type: "emoji" }, { id: "c", content: "🍉", type: "emoji" }] },
-            { title: "Associação de Cores", desc: "Combine as cores correspondentes!", items: [{ id: "1", content: "var(--neon-blue)", type: "color" }, { id: "2", content: "var(--neon-pink)", type: "color" }, { id: "3", content: "var(--neon-green)", type: "color" }] }
+            { 
+                title: "1. Pareamento de Frutas", 
+                desc: "Conecte as frutas idênticas das colunas!", 
+                items: [{ id: "a", content: "🍎", type: "emoji" }, { id: "b", content: "🍌", type: "emoji" }, { id: "c", content: "🍉", type: "emoji" }] 
+            },
+            { 
+                title: "2. Associação de Cores", 
+                desc: "Combine as caixas que têm a mesma cor!", 
+                items: [{ id: "1", content: "var(--neon-blue)", type: "color" }, { id: "2", content: "var(--neon-pink)", type: "color" }, { id: "3", content: "var(--neon-green)", type: "color" }] 
+            },
+            { 
+                title: "3. Lógica de Símbolos", 
+                desc: "Ache os símbolos correspondentes e junte-os!", 
+                items: [{ id: "x1", content: "⭐", type: "emoji" }, { id: "x2", content: "⚡", type: "emoji" }, { id: "x3", content: "🎈", type: "emoji" }] 
+            },
+            { 
+                title: "4. Mundo dos Animais", 
+                desc: "Ligue os animaizinhos iguais!", 
+                items: [{ id: "an1", content: "🐶", type: "emoji" }, { id: "an2", content: "🐱", type: "emoji" }, { id: "an3", content: "🦁", type: "emoji" }] 
+            },
+            { 
+                title: "5. Reconhecendo Emoções", 
+                desc: "Pareie as expressões faciais correspondentes!", 
+                items: [{ id: "em1", content: "😀", type: "emoji" }, { id: "em2", content: "😮", type: "emoji" }, { id: "em3", content: "😌", type: "emoji" }] 
+            }
         ];
 
         let currentPhase = 0, selectedNode = null, matches = 0, startTime = null, totalErrors = 0, userName = "";
@@ -108,6 +132,7 @@
             document.getElementById("lines-layer").innerHTML = "";
             document.getElementById("next-action-btn").style.display = "none";
             document.getElementById("phase-title").innerText = phase.title;
+            document.getElementById("phase-desc").innerText = phase.desc;
             document.getElementById("progress-indicator").style.width = `${((index + 1) / gamePhases.length) * 100}%`;
             
             const leftCol = document.getElementById("left-nodes"), rightCol = document.getElementById("right-nodes");
@@ -124,7 +149,7 @@
 
             shuffledRight.forEach((item, i) => {
                 const node = document.createElement("div"); node.className = "node"; node.dataset.id = item.id;
-                node.setAttribute("data-border", borderColors[(i + 2) % borderColors.length]);
+                node.setAttribute("data-border", borderColors[(i + 3) % borderColors.length]);
                 node.innerHTML = item.type === "emoji" ? `<span>${item.content}</span>` : `<div class="color-block" style="background:${item.content}"></div>`;
                 node.onclick = () => handleSelect(node, "right"); rightCol.appendChild(node);
             });
@@ -162,7 +187,7 @@
         function updateTelemetry() {
             if(!startTime) return;
             const time = ((Date.now() - startTime) / 1000).toFixed(1);
-            document.getElementById("telemetry-data").innerText = `${time}s | Erros: ${totalErrors}`;
+            document.getElementById("telemetry-data").innerText = `${time}s | Erros Encontrados: ${totalErrors}`;
         }
 
         function advancePhase() {
@@ -171,7 +196,6 @@
             } else {
                 const totalTime = ((Date.now() - startTime) / 1000).toFixed(1);
                 
-                // SALVANDO NO HISTÓRICO LOCAL
                 let history = JSON.parse(localStorage.getItem('acessiquiz_history')) || [];
                 const sessionData = {
                     name: userName,
@@ -179,11 +203,11 @@
                     errors: totalErrors,
                     date: new Date().toLocaleDateString('pt-BR') + ' ' + new Date().toLocaleTimeString('pt-BR', {hour: '2-digit', minute:'2-digit'})
                 };
-                history.unshift(sessionData); // Adiciona no início
+                history.unshift(sessionData);
                 localStorage.setItem('acessiquiz_history', JSON.stringify(history));
                 localStorage.setItem('acessiquiz_last_session', JSON.stringify(sessionData));
 
-                alert(`Treino Concluído! Tempo: ${totalTime}s | Erros: ${totalErrors}`);
+                alert(`Incrível! Sessão Completa das 5 Atividades!\nTempo total: ${totalTime}s | Erros: ${totalErrors}`);
                 location.reload();
             }
         }
