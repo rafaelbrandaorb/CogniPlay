@@ -3,10 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>CogniPlay - Universo de Cores</title>
+    <title>CogniPlay - Universo de Cores e Sons</title>
     <style>
         :root {
-            /* Cores Oficiais do Espectro Autista - Versão Vibrante Neon */
             --tea-blue: #0070f3;
             --tea-red: #ff2a2a;
             --tea-yellow: #ffd700;
@@ -20,14 +19,12 @@
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; user-select: none; -webkit-user-select: none;}
         body { background: radial-gradient(circle, #131c42 0%, var(--bg-dark) 100%); color: var(--text-main); min-height: 100vh; display: flex; align-items: center; justify-content: center; padding: 12px; overflow: hidden; position: relative; }
 
-        /* Partículas de Brilho Dinâmicas */
         .particle { position: absolute; pointer-events: none; font-size: 24px; animation: floatUp 1s ease-out forwards; z-index: 999; }
         @keyframes floatUp {
             0% { transform: translateY(0) scale(0.5); opacity: 1; }
             100% { transform: translateY(-100px) scale(1.5); opacity: 0; }
         }
 
-        /* Efeito de Tremor para Erro Lúdico */
         @keyframes shake {
             0%, 100% { transform: translateX(0); }
             25% { transform: translateX(-6px); }
@@ -39,7 +36,6 @@
         
         #menu-screen, #game-container, #victory-screen { display: none; }
 
-        /* TELA DE LOGIN VIBRANTE */
         .login-icon { font-size: 4rem; animation: pulse 2s infinite ease-in-out; display: inline-block; margin-bottom: 10px; }
         @keyframes pulse { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.08); } }
         
@@ -50,24 +46,19 @@
         .action-btn-main { width: 100%; padding: 18px; background: linear-gradient(45deg, var(--tea-red), var(--tea-yellow)); border: none; border-radius: 20px; color: #000; font-weight: 900; font-size: 1.2rem; cursor: pointer; margin-top: 25px; box-shadow: 0 6px 20px rgba(255,42,42,0.4); transition: transform 0.1s; }
         .action-btn-main:active { transform: scale(0.96); }
 
-        /* MENU DE SELEÇÃO COLORIDO (PALETA TEA) */
         .menu-grid { display: flex; flex-direction: column; gap: 12px; margin-top: 20px; }
-        .menu-card { 
-            display: flex; align-items: center; gap: 16px; padding: 16px; border-radius: 22px; cursor: pointer; text-align: left; transition: all 0.2s; border: 3px solid transparent; background: rgba(255,255,255,0.03);
-        }
+        .menu-card { display: flex; align-items: center; gap: 16px; padding: 16px; border-radius: 22px; cursor: pointer; text-align: left; transition: all 0.2s; border: 3px solid transparent; background: rgba(255,255,255,0.03); }
         .menu-card:active { transform: scale(0.97); }
         .menu-card .icon { font-size: 2.2rem; filter: drop-shadow(0 0 5px rgba(255,255,255,0.3)); }
         .menu-card h3 { font-size: 1.1rem; color: #fff; font-weight: 800; }
         .menu-card p { font-size: 0.8rem; color: var(--text-muted); margin: 0; }
         
-        /* Cores Temáticas Alternadas */
         .menu-card[data-theme="1"] { border-color: var(--tea-blue); box-shadow: 0 0 12px rgba(0,112,243,0.2); }
         .menu-card[data-theme="2"] { border-color: var(--tea-red); box-shadow: 0 0 12px rgba(255,42,42,0.2); }
         .menu-card[data-theme="3"] { border-color: var(--tea-yellow); box-shadow: 0 0 12px rgba(255,215,0,0.2); }
         .menu-card[data-theme="4"] { border-color: var(--tea-green); box-shadow: 0 0 12px rgba(0,230,118,0.2); }
         .menu-card[data-theme="5"] { border-color: var(--tea-blue); box-shadow: 0 0 12px rgba(0,112,243,0.2); }
 
-        /* ÁREA DE JOGO DINÂMICA */
         .combo-badge { position: absolute; top: -10px; right: 20px; background: var(--tea-red); color: white; padding: 5px 12px; border-radius: 12px; font-weight: 900; font-size: 0.9rem; animation: pulse 0.5s infinite alternate; display: none; box-shadow: 0 0 10px var(--tea-red); }
         .progress-bar-container { width: 100%; height: 12px; background: rgba(255, 255, 255, 0.08); border-radius: 10px; margin-bottom: 15px; overflow: hidden; border: 1px solid rgba(255,255,255,0.1); }
         .progress-bar-fill { height: 100%; width: 0%; background: linear-gradient(90deg, var(--tea-blue), var(--tea-green), var(--tea-yellow)); transition: width 0.3s; }
@@ -76,19 +67,16 @@
         #lines-layer { position: absolute; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; z-index: 1; }
         .column { display: flex; flex-direction: column; justify-content: space-between; gap: 8px; z-index: 2; }
         
-        /* Círculos com Cores Vibrantes Fixas */
         .node { width: 62px; height: 62px; background: #121936; border: 4px solid #303f7a; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 32px; cursor: pointer; transition: all 0.2s; touch-action: manipulation; box-shadow: 0 4px 10px rgba(0,0,0,0.4); }
         .node.selected { background: #25336e; transform: scale(1.15); border-color: var(--tea-yellow) !important; box-shadow: 0 0 15px var(--tea-yellow); }
-        .node.matched { border-color: var(--tea-green) !important; background: rgba(0, 230, 118, 0.15); box-shadow: 0 0 15px var(--tea-green); transform: scale(0.95); opacity: 0.8; }
+        .node.matched { border-color: var(--tea-green) !important; background: rgba(0, 230, 118, 0.15); box-shadow: 0 0 15px var(--tea-green); transform: scale(0.95); opacity: 0.8; cursor: default; }
         .color-block { width: 36px; height: 36px; border-radius: 50%; }
 
-        /* BOTÕES DE CONCLUSÃO (FESTIVOS) */
         .game-footer-btns { display: none; flex-direction: column; gap: 10px; margin-top: 20px; }
         .footer-btn { width: 100%; padding: 16px; border: none; border-radius: 20px; font-size: 1.1rem; font-weight: 900; cursor: pointer; text-transform: uppercase; }
         .btn-next { background: linear-gradient(45deg, var(--tea-green), #00b0ff); color: #000; box-shadow: 0 6px 15px rgba(0,230,118,0.4); }
         .btn-menu { background: rgba(255, 255, 255, 0.06); color: #fff; border: 2px solid rgba(255, 255, 255, 0.15); }
 
-        /* TELA DE CELEBRAÇÃO VITÓRIA */
         .medal { font-size: 5rem; margin: 15px 0; display: inline-block; animation: bounce 1s infinite alternate; }
         @keyframes bounce { 0% { transform: translateY(0); } 100% { transform: translateY(-15px); } }
 
@@ -172,8 +160,7 @@
     </div>
 
     <script>
-        // Cores fixas associadas sequencialmente aos botões para estímulo visual alegre
-        const nodeColors = [/*Azul*/ "#0070f3", /*Vermelho*/ "#ff2a2a", /*Amarelo*/ "#ffd700", /*Verde*/ "#00e676", /*Roxo*/ "#9c27b0"];
+        const nodeColors = ["#0070f3", "#ff2a2a", "#ffd700", "#00e676", "#9c27b0"];
         
         const gamePhases = [
             { title: "Pareamento de Frutas", desc: "Ligue as frutas iguais!", items: [{ id: "a", content: "🍎" }, { id: "b", content: "🍌" }, { id: "c", content: "🍉" }, { id: "d", content: "🍇" }, { id: "e", content: "🍓" }], type: "emoji" },
@@ -185,10 +172,71 @@
 
         let selectedActivity = 0, selectedNode = null, matches = 0, startTime = null, totalErrors = 0, userName = "";
         let score = 0, lastMatchTime = 0, comboCount = 0;
+        
+        // Inicialização do Motor de Áudio do Navegador
+        let audioCtx = null;
+        function initAudio() {
+            if (!audioCtx) {
+                audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+            }
+        }
+
+        // Sintetizadores de Som via Código (Sem arquivos externos)
+        function playSound(type) {
+            if (!audioCtx) return;
+            
+            const osc = audioCtx.createOscillator();
+            const gain = audioCtx.createGain();
+            osc.connect(gain);
+            gain.connect(audioCtx.destination);
+
+            const now = audioCtx.currentTime;
+
+            if (type === "match") {
+                // Som de Acerto: Alegre e ascendente (Estilo Mário pulando)
+                osc.type = "sine";
+                osc.frequency.setValueAtTime(300, now);
+                osc.frequency.exponentialRampToValueAtTime(600, now + 0.15);
+                gain.gain.setValueAtTime(0.2, now);
+                gain.gain.linearRampToValueAtTime(0.01, now + 0.15);
+                osc.start(now);
+                osc.stop(now + 0.15);
+            } else if (type === "error") {
+                // Som de Erro: Grave, suave e rápido (Sem assustar)
+                osc.type = "triangle";
+                osc.frequency.setValueAtTime(140, now);
+                osc.frequency.linearRampToValueAtTime(100, now + 0.12);
+                gain.gain.setValueAtTime(0.25, now);
+                gain.gain.linearRampToValueAtTime(0.01, now + 0.12);
+                osc.start(now);
+                osc.stop(now + 0.12);
+            } else if (type === "victory") {
+                // Som de Vitória: Pequena fanfarra festiva de 3 notas rápidas
+                osc.type = "square";
+                gain.gain.setValueAtTime(0.15, now);
+                
+                // Nota 1
+                osc.frequency.setValueAtTime(400, now);
+                // Nota 2
+                osc.frequency.setValueAtTime(520, now + 0.1);
+                // Nota 3 longa e vitoriosa
+                osc.frequency.setValueAtTime(660, now + 0.2);
+                
+                gain.gain.setValueAtTime(0.15, now);
+                gain.gain.linearRampToValueAtTime(0.01, now + 0.5);
+                
+                osc.start(now);
+                osc.stop(now + 0.5);
+            }
+        }
 
         function handleLogin() {
             userName = document.getElementById('username').value.trim();
             if (!userName) { alert("Por favor, insira o nome."); return; }
+            
+            // Libera o sistema de áudio no clique humano
+            initAudio();
+            
             localStorage.setItem('acessiquiz_current_user', userName);
             document.getElementById('login-screen').style.display = 'none';
             document.getElementById('menu-screen').style.display = 'block';
@@ -224,7 +272,6 @@
 
             shuffledRight.forEach((item, i) => {
                 const node = document.createElement("div"); node.className = "node"; node.dataset.id = item.id;
-                // Embaralha as bordas do lado direito para ficar bem colorido e dinâmico
                 node.style.borderColor = nodeColors[(i + 2) % nodeColors.length];
                 node.innerHTML = phase.type === "emoji" ? `<span>${item.content}</span>` : `<div class="color-block" style="background:${item.content}"></div>`;
                 node.onclick = () => handleSelect(node, "right"); rightCol.appendChild(node);
@@ -245,14 +292,13 @@
                 if (!selectedNode) return;
                 
                 if (selectedNode.dataset.id === node.dataset.id) {
-                    // PAR CORRETO!
+                    // TOCA SOM DE ACERTO!
+                    playSound("match");
+                    
                     drawConnection(selectedNode, node);
                     selectedNode.classList.add("matched"); node.classList.add("matched");
-                    
-                    // Dispara explosão visual de estrelas
                     createSparkles(node);
                     
-                    // Cálculo de Combo por velocidade de foco
                     const now = Date.now();
                     if (now - lastMatchTime < 3500 && matches > 0) {
                         comboCount++;
@@ -268,8 +314,6 @@
                     lastMatchTime = now;
 
                     selectedNode.classList.remove("selected"); selectedNode = null; matches++;
-                    
-                    // Atualiza Barra de Progresso
                     document.getElementById('bar-fill').style.width = `${(matches / 5) * 100}%`;
                     
                     if (matches === 5) {
@@ -277,7 +321,8 @@
                         document.getElementById("footer-controls").style.display = "flex";
                     }
                 } else {
-                    // SE O ALUNO ERRAR: Animação de tremor sem som punitivo
+                    // TOCA SOM DE ERRO SUTIL + TREME PEÇA
+                    playSound("error");
                     totalErrors++;
                     comboCount = 0;
                     document.getElementById('combo-display').style.display = "none";
@@ -330,12 +375,14 @@
         }
 
         function showVictoryScreen() {
+            // TOCA SOM DE VITÓRIA HISTÓRICA!
+            playSound("victory");
+            
             document.getElementById('game-container').style.display = 'none';
             document.getElementById('victory-screen').style.display = 'block';
             document.getElementById('victory-points').innerText = `${score} pts`;
             document.getElementById('victory-message').innerText = `Muito bem, ${userName}! Você completou com apenas ${totalErrors} erros!`;
             
-            // Chuva de confetes coloridos simples na vitória
             for (let i = 0; i < 25; i++) {
                 setTimeout(() => {
                     const confete = document.createElement("div");
