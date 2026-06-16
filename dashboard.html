@@ -2,7 +2,7 @@
 <html lang="pt-BR">
 <head>
     <meta charset="UTF-8">
-    <title>AcessiQuiz Pro - Portal de Desempenho Vivo</title>
+    <title>CogniPlay - Portal de Desempenho Vivo</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <style>
         :root { --bg: #060913; --card: #0d1321; --green: #00ffaa; --pink: #ff007f; --blue: #38bdf8; --text: #f1f5f9; --muted: #64748b; }
@@ -24,7 +24,6 @@
         .val { font-size: 36px; font-weight: 800; display: block; margin: 8px 0; }
         .label { color: var(--muted); font-size: 11px; text-transform: uppercase; font-weight: bold; }
 
-        /* TABELA DE HISTÓRICO DO PROFISSIONAL */
         .history-box { background: var(--card); border-radius: 20px; padding: 20px; border: 1px solid rgba(255,255,255,0.05); overflow-x: auto; }
         table { width: 100%; border-collapse: collapse; text-align: left; min-width: 500px; }
         th { padding: 14px; color: var(--green); font-size: 0.9rem; border-bottom: 2px solid rgba(255,255,255,0.1); }
@@ -38,8 +37,8 @@
     <div class="wrapper">
         <header>
             <div>
-                <h1 style="margin:0; font-size: 1.6rem; color: var(--green);">Portal Metodológico AcessiQuiz</h1>
-                <p style="color: var(--muted); font-size: 0.85rem; margin-top: 4px;">Monitoramento de telemetria cognitiva em tempo real.</p>
+                <h1 style="margin:0; font-size: 1.6rem; color: var(--green);">Portal Metodológico CogniPlay</h1>
+                <p style="color: var(--muted); font-size: 0.85rem; margin-top: 4px;">Onde a diversão encontra o desenvolvimento.</p>
             </div>
             <div class="user-badge">⚡ Aluno Ativo: <span id="header-user">Nenhum</span></div>
         </header>
@@ -110,7 +109,6 @@
             const history = JSON.parse(localStorage.getItem('acessiquiz_history')) || [];
             const lastSession = JSON.parse(localStorage.getItem('acessiquiz_last_session'));
 
-            // 1. CARREGAR PAINEL PROFISSIONAL (HISTÓRICO)
             const tableBody = document.getElementById('history-table-body');
             const noDataMsg = document.getElementById('no-data-msg');
             tableBody.innerHTML = "";
@@ -137,12 +135,10 @@
                 document.getElementById('pro-average-time').innerText = avg + 's';
             }
 
-            // 2. CARREGAR PAINEL DOS PAIS (DADOS DO FILHO ATIVO)
             if (lastSession) {
                 document.getElementById('parent-time').innerText = lastSession.time + 's';
                 document.getElementById('parent-errors').innerText = lastSession.errors + (lastSession.errors === 1 ? ' erro' : ' erros');
                 
-                // Determinar nível baseado em erros
                 let status = "Excelente";
                 let feedbackMsg = `Parabéns! <b>${lastSession.name}</b> mostrou uma atenção incrível hoje, terminando a atividade em rápidos ${lastSession.time} segundos de forma super focada!`;
                 
