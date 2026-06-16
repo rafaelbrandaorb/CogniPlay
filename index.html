@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>AcessiQuiz - 5 Pares por Atividade</title>
+    <title>CogniPlay - Desafio dos Pares</title>
     <style>
         :root {
             --bg-gradient: linear-gradient(135deg, #0f172a 0%, #1e1b4b 100%);
@@ -24,8 +24,9 @@
         
         #menu-screen, #game-container { display: none; }
 
-        .login-icon { font-size: 3.5rem; margin-bottom: 15px; display: inline-block; }
-        h2 { font-size: 1.8rem; margin-bottom: 8px; color: var(--neon-green); }
+        .login-icon { font-size: 3.5rem; margin-bottom: 10px; display: inline-block; }
+        h2 { font-size: 2.2rem; margin-bottom: 4px; color: var(--neon-green); font-weight: 900; letter-spacing: -0.5px; }
+        .slogan { color: var(--neon-blue); font-size: 0.9rem; font-weight: 600; margin-bottom: 20px; opacity: 0.9; }
         p { color: var(--text-muted); margin-bottom: 20px; font-size: 0.95rem; }
 
         .input-group input { width: 100%; background: rgba(0,0,0,0.4); border: 2px solid rgba(255,255,255,0.1); border-radius: 16px; padding: 18px; color: #fff; font-size: 1.1rem; outline: none; text-align: center; font-weight: bold; }
@@ -56,7 +57,7 @@
         .menu-card[data-theme="4"] { border-color: rgba(0, 255, 170, 0.3); }
         .menu-card[data-theme="5"] { border-color: rgba(191, 90, 242, 0.3); }
 
-        /* JOGO INTERATIVO (OTIMIZADO PARA 5 ITENS) */
+        /* JOGO INTERATIVO */
         .progress-bar-container { width: 100%; height: 8px; background: rgba(255, 255, 255, 0.08); border-radius: 10px; margin-bottom: 15px; overflow: hidden; }
         .progress-bar-fill { height: 100%; width: 100%; background: linear-gradient(90deg, var(--neon-blue), var(--neon-green)); }
 
@@ -64,7 +65,6 @@
         #lines-layer { position: absolute; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; z-index: 1; }
         .column { display: flex; flex-direction: column; justify-content: space-between; gap: 10px; z-index: 2; }
         
-        /* Círculos ligeiramente menores (58px) para caberem perfeitamente sem rolar a tela */
         .node { width: 58px; height: 58px; background: rgba(255, 255, 255, 0.04); border: 3px solid rgba(255, 255, 255, 0.15); border-radius: 18px; display: flex; align-items: center; justify-content: center; font-size: 28px; cursor: pointer; transition: all 0.2s; touch-action: manipulation; }
         .node.selected { background: rgba(255, 255, 255, 0.15); transform: scale(1.08); }
         .node.matched { border-color: var(--neon-green) !important; background: rgba(0, 255, 170, 0.15); opacity: 0.35; cursor: default; }
@@ -82,7 +82,8 @@
 
     <div id="login-screen" class="box-panel" style="display: block;">
         <span class="login-icon">🎮</span>
-        <h2>AcessiQuiz</h2>
+        <h2>CogniPlay</h2>
+        <div class="slogan">Onde a diversão encontra o desenvolvimento</div>
         <p>Insira o nome do aluno para começar.</p>
         <div class="input-group">
             <input type="text" id="username" placeholder="Nome do Aluno" autocomplete="off">
@@ -91,13 +92,13 @@
     </div>
 
     <div id="menu-screen" class="box-panel">
-        <h2 style="color: #fff; font-size: 1.5rem;">Escolha uma Atividade</h2>
-        <p style="margin-bottom: 10px;">Selecione o tema para iniciar o treino cognitivo:</p>
+        <h2 style="color: #fff; font-size: 1.5rem; margin-bottom: 2px;">Escolha uma Atividade</h2>
+        <div class="slogan" style="margin-bottom: 15px; font-size: 0.8rem;">Plataforma de Estimulação Cognitiva</div>
         
         <div class="menu-grid">
             <div class="menu-card" data-theme="1" onclick="startActivity(0)">
                 <div class="icon">🍎</div>
-                <div class="info"><h3>Pareamento de Frutas</h3><p>Agora com 5 frutas coloridas diferentes.</p></div>
+                <div class="info"><h3>Pareamento de Frutas</h3><p>5 frutas coloridas diferentes.</p></div>
             </div>
             <div class="menu-card" data-theme="2" onclick="startActivity(1)">
                 <div class="icon">🎨</div>
@@ -143,7 +144,6 @@
     <script>
         const borderColors = ["blue", "pink", "green", "yellow", "purple"];
         
-        // CADA ATIVIDADE POSSUI AGORA EXATAMENTE 5 ELEMENTOS
         const gamePhases = [
             { title: "Pareamento de Frutas", desc: "Ligue as frutas iguais!", items: [{ id: "a", content: "🍎" }, { id: "b", content: "🍌" }, { id: "c", content: "🍉" }, { id: "d", content: "🍇" }, { id: "e", content: "🍓" }], type: "emoji" },
             { title: "Associação de Cores", desc: "Combine as caixas de mesma cor!", items: [{ id: "1", content: "var(--neon-blue)" }, { id: "2", content: "var(--neon-pink)" }, { id: "3", content: "var(--neon-green)" }, { id: "4", content: "var(--neon-yellow)" }, { id: "5", content: "var(--neon-purple)" }], type: "color" },
